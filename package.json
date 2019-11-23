@@ -1,0 +1,52 @@
+{
+  "name": "electron-react-template",
+  "version": "1.0.0",
+  "private": true,
+  "author": "terenty rezman",
+  "license": "ISC",
+  "description": "",
+  "homepage": "./",
+  "main": "build/electron.js",
+  "build": {
+    "appId": "some.app.id",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {},
+    "linux": {
+      "category": "some.category"
+    }
+  },
+  "scripts": {
+    "electron": "electron .",
+    "build": "webpack --mode=development",
+    "prod": "webpack --mode=production",
+    "start": "webpack --mode=development && electron . & webpack-dev-server --mode=development",
+    "pack": "npm run prod && electron-builder --dir",
+    "dist": "npm run prod && electron-builder"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-proposal-class-properties": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-react": "^7.7.0",
+    "babel-loader": "^8.0.6",
+    "copy-webpack-plugin": "^5.0.5",
+    "css-loader": "^3.2.0",
+    "electron": "^7.1.2",
+    "electron-builder": "^21.2.0",
+    "file-loader": "^4.3.0",
+    "style-loader": "^1.0.0",
+    "url-loader": "^2.3.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "dependencies": {
+    "custom-electron-titlebar": "^3.1.0"
+  }
+}

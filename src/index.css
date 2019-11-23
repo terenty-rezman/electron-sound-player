@@ -1,0 +1,25 @@
+html, body {
+    background: #fff;
+    color: #74B1BE;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+    height: 100%;
+}
+
+h1 {
+    color: #aaa;
+}
+
+h3 {
+    color: #9FEAF9;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
