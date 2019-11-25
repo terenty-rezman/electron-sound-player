@@ -55,7 +55,10 @@ const config_electron_react_renderer = (env, argv) => {
             // presence of @babel/preset-env is also questionable
             // as we targeting chrome
             presets: ['@babel/preset-env' ,'@babel/preset-react'],
-            plugins: ['@babel/plugin-proposal-class-properties'],
+            plugins: [
+              ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }], // `style: true` for less
+              '@babel/plugin-proposal-class-properties'
+            ],
           },
         },
         {

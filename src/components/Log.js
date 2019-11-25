@@ -27,7 +27,7 @@ const console_interceptor = new ConsoleInterceptor();
 
 // auto scroll to bottom taken from https://stackoverflow.com/questions/37620694/how-to-scroll-to-bottom-in-react
 
-const Log = () => {
+const Log = (props) => {
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);
 
@@ -51,7 +51,7 @@ const Log = () => {
     useEffect(scrollToBottom, [messages]);
 
     return (
-        <div>
+        <div {...props} >
             <div className='log'>{messages.join('\n')}</div>
             <div ref={messagesEndRef} />
         </div>

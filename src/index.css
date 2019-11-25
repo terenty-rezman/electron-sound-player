@@ -1,13 +1,20 @@
+
+
 html, body {
     background: #fff;
-    color: #74B1BE;
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
+}
+
+.container-after-titlebar {
+    overflow: hidden !important;
 }
 
 #root {
     height: 100%;
+    overflow: hidden;
 }
 
 h1 {
@@ -15,11 +22,51 @@ h1 {
 }
 
 h3 {
-    color: #9FEAF9;
+    color: #9FEAF9; 
 }
 
 .container {
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.h50 {
+    flex-basis: 50%;
+    flex-shrink: 0;
+}
+
+.h70 {
+    flex-basis: 70%;
+    flex-shrink: 0;
+}
+
+.h30 {
+    flex-basis: 30%;
+    flex-shrink: 0;
+}
+
+.scroll {
+    overflow-y: scroll;
+}
+
+.no_scroll {
+    overflow-y: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #babdc0; 
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    margin-right: 5px;
 }
