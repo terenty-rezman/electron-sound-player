@@ -7,26 +7,32 @@ const BrowserWindow = electron.BrowserWindow;
 let mainWindow = null;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({ 
-      width: 800, 
-      height: 600,
-      minHeight: 200,
-      minWidth: 200,
-      backgroundColor: '#fff',
-      frame: false,
-      webPreferences: {
-        nodeIntegration: true
-      } 
-    });
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    minHeight: 200,
+    minWidth: 200,
+    backgroundColor: '#fff',
+    frame: false,
+    show: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
 
-  if(process.env.WEBPACK_MODE === 'production')
-    mainWindow.loadFile('./build/index.html');
-  else
-    mainWindow.loadURL('http://localhost:3132');
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  if (process.env.WEBPACK_MODE === 'production')
+    mainWindow.loadFile('./build/index.html');
+  else
+    mainWindow.loadURL('http://localhost:3132');
+
 }
 
 app.on('ready', createWindow)
