@@ -8,6 +8,9 @@ const customTitlebar = require('custom-electron-titlebar');
 // to debug renderer process with vscode follow 
 // https://blog.matsu.io/debug-electron-vscode
 
+// main layout flex + scroll in children taken from:
+// https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336
+
 // install custom title bar
 new customTitlebar.Titlebar({
   backgroundColor: customTitlebar.Color.fromHex('#222')
