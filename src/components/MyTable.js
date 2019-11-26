@@ -7,9 +7,9 @@ const MyTable = (props) => {
   const column_headers = props.columns.map((column, index) => <Col span={8} key={column.dataIndex}>{column.title}</Col>);
   const data_keys = props.columns.map(column => column.key);
 
-  const data_rows = props.dataSource.map(row => {
+  let data_rows = props.dataSource.map(row => {
     return (
-      <Row key={row.key}>
+      <Row key={row.key} className='table-item'>
         {
           data_keys.map(key =>
             <Col span={8} key={key}>{row[key]}</Col>
@@ -20,18 +20,16 @@ const MyTable = (props) => {
   })
 
   return (
-    <div className={props.className} style={{display: 'flex', flexDirection:'column'}}>
-      <div className='no_scroll' style={{flexShrink: 0}}>
+    <div className={props.className}>
         {/* <table>
           <thead>
             <tr>{column_headers}</tr>
           </thead>
         </table> */}
-        <Row>
+        <Row className='content'>
           {column_headers}
         </Row>
-        </div>
-        <div className='scroll'>
+        <div className='scrollable-content'>
         {/* <table>
           <tbody>
             {data_rows}

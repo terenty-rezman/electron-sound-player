@@ -19,7 +19,7 @@ sound_server.on('play', (time, sounds) => {
 
 
 const data = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 20; i++) {
   data.push({
     key: i,
     name: `Edward King ${i}`,
@@ -56,14 +56,14 @@ const App = () => {
   return (
     <div className='container' onClick={() => { console.log(new Date()) }}>
       <MyTable 
-        className='no_scroll' 
+        className='section' 
         locale={{ emptyText: ' ' }} 
         dataSource={data} 
         columns={columns} 
         pagination={false}
         scroll={{ y: 100 }}
       />
-      <Log className='h30 scroll'/>
+      <Log className='h30 scrollable-content'/>
     </div> 
   )
 }
