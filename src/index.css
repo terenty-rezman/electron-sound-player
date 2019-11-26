@@ -7,7 +7,16 @@ html, body {
 }
 
 .container-after-titlebar {
-    
+
+}
+
+.divider {
+    height: 1px;
+    background: #e8e8e8;
+}
+
+.flex_no_shrink {
+    flex-shrink: 0;
 }
 
 #root {
@@ -25,50 +34,57 @@ h1 {
 }
 
 h3 {
-    color: #9FEAF9; 
+color: #9FEAF9; 
 }
 
 .container {
-    /* give the outermost container a predefined size */
+/* give the outermost container a predefined size */
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 10px;
-    
+
     display: flex;
     flex-direction: column;
-  }
-  
-  .section {
+}
+
+.pad-left {
+    padding-left: 10px;
+}
+
+.section {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    
+
     /* for Firefox */
     min-height: 0;
-  }
-  
-  .content {
-    
-  }
-  
-  .scrollable-content {
+}
+
+.table-heading {
+    padding: 10px;
+    padding-right: 16px; /* compensate for scrollbar */
+    background: #F7F8F9;
+    border-top: #000 1px solid;
+    font-weight: bold;
+}
+
+.scrollable-content {
     flex-grow: 1; 
     overflow: auto;
-    
+
     /* for Firefox */
     min-height: 0;
-  }
+}
 
 .h50 {
     flex-basis: 50%;
     flex-shrink: 0;
 }
 
-.h70 {
-    /* flex-basis: 70%; */
+.h60 {
+    flex-basis: 60%;
     flex-grow: 1;
     flex-shrink: 0;
 }
@@ -80,19 +96,22 @@ h3 {
 }
 
 .table-item {
-    margin: 10px;
+    box-sizing: border-box;
+    margin: 20px;
     margin-left: 0;
     margin-right: 0;
 }
 
 
 ::-webkit-scrollbar {
-    width: 4px;
+    width: 16px;
     height: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #babdc0; 
+    background: rgba(0,0,0, 0.2);
+    border-radius: 16px; 
+    border:6px solid #fff
 }
 
 ::-webkit-scrollbar-track {

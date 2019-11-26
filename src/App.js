@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Log from './components/Log'
 import sound_server from './SoundServer'
-import { Table, Row, Col } from 'antd'
+import { Table, Row, Col, Divider } from 'antd'
 import MyTable from './components/MyTable'
 const customTitlebar = require('custom-electron-titlebar');
 
@@ -13,16 +13,15 @@ const customTitlebar = require('custom-electron-titlebar');
 
 // install custom title bar
 new customTitlebar.Titlebar({
-  backgroundColor: customTitlebar.Color.fromHex('#222')
+  backgroundColor: customTitlebar.Color.fromHex('#24292E')
 });
 
 sound_server.on('play', (time, sounds) => {
 
 })
 
-
 const data = [];
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 122; i++) {
   data.push({
     key: i,
     name: `Edward King ${i}`,
@@ -59,14 +58,15 @@ const App = () => {
   return (
     <div className='container' onClick={() => { console.log(new Date()) }}>
       <MyTable 
-        className='section' 
+        className='section h60' 
         locale={{ emptyText: ' ' }} 
         dataSource={data} 
         columns={columns} 
         pagination={false}
-        scroll={{ y: 100 }}
+        scroll={{ y: true }}
       />
-      <Log className='h30 scrollable-content'/>
+      <div className='divider flex_no_shrink'/>
+      <Log className='h30 scrollable-content pad-left'/>
     </div> 
   )
 }

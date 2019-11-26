@@ -4,15 +4,15 @@ import { Row, Col } from 'antd'
 
 const MyTable = (props) => {
 
-  const column_headers = props.columns.map((column, index) => <Col span={8} key={column.dataIndex}>{column.title}</Col>);
+  const column_headers = props.columns.map((column, index) => <Col span={5} offset={1} key={column.dataIndex}>{column.title}</Col>);
   const data_keys = props.columns.map(column => column.key);
 
   let data_rows = props.dataSource.map(row => {
     return (
-      <Row key={row.key} className='table-item'>
+      <Row key={row.key} className='table-item pad-left'>
         {
           data_keys.map(key =>
-            <Col span={8} key={key}>{row[key]}</Col>
+            <Col span={5} offset={1} key={key}>{row[key]}</Col>
           )
         }
       </Row>
@@ -26,7 +26,7 @@ const MyTable = (props) => {
             <tr>{column_headers}</tr>
           </thead>
         </table> */}
-        <Row className='content'>
+        <Row className='table-heading'>
           {column_headers}
         </Row>
         <div className='scrollable-content'>
