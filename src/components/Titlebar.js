@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './titlebar.css'
+import './Titlebar.css'
 
 // taken from https://github.com/binaryfunt/electron-seamless-titlebar-tutorial
 // SegoeUI symbol table https://docs.microsoft.com/en-us/windows/uwp/design/style/segoe-ui-symbol-font

@@ -1,42 +1,49 @@
 import React from 'react'
-
 import { Row, Col } from 'antd'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
+
+
+import './MyTable.css'
 
 const MyTable = (props) => {
 
-  const column_headers = props.columns.map((column, index) => <Col span={5} offset={1} key={column.dataIndex}>{column.title}</Col>);
-  const data_keys = props.columns.map(column => column.key);
+  const colsizes = props.columns.map(column => column.size);
+
+  const column_headers = props.columns.map((column, index) =>
+    <Col span={colsizes[index]} key={column.dataIndex}>
+      {column.title}
+    </Col>
+  );
+
+  const keys_renders = props.columns.map(column => [column.key, column.render]);
 
   let data_rows = props.dataSource.map(row => {
     return (
-      <Row key={row.key} className='table-item pad-left'>
-        {
-          data_keys.map(key =>
-            <Col span={5} offset={1} key={key}>{row[key]}</Col>
-          )
-        }
-      </Row>
+      <CSSTransition
+        timeout={300}
+        classNames="fade"
+        key={row.key}
+        unmountOnExit
+      >
+        <Row className='table-item pad-left'>
+          {
+            keys_renders.map(([key, render], index) =>
+              <Col span={colsizes[index]} key={key} className='table-col'>{(render) ? render(row) : row[key]}</Col>
+            )
+          }
+        </Row>
+      </CSSTransition>
     )
   })
 
   return (
     <div className={props.className}>
-        {/* <table>
-          <thead>
-            <tr>{column_headers}</tr>
-          </thead>
-        </table> */}
-        <Row className='table-heading'>
-          {column_headers}
-        </Row>
-        <div className='scrollable-content'>
-        {/* <table>
-          <tbody>
-            {data_rows}
-          </tbody>
-        </table> */}
+      <Row className='table-heading'>
+        {column_headers}
+      </Row>
+      <TransitionGroup className='scrollable-content'>
         {data_rows}
-      </div>
+      </TransitionGroup>
     </div>
   )
 }

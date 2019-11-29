@@ -1,0 +1,59 @@
+{
+    "sound_list": [
+        {
+            "main_sound": "sound_engine_min_l.ogg",
+            "pre_sound": null,
+            "priority": 9
+        },
+        {
+            "main_sound": "sound_engine_max_l.ogg",
+            "pre_sound": null,
+            "priority": 7
+        },
+        {
+            "main_sound": "sound_flaps_down.ogg",
+            "pre_sound": null,
+            "priority": 2
+        },
+        {
+            "main_sound": "sound_flaps_up.ogg",
+            "pre_sound": null,
+            "priority": 2
+        },
+        {
+            "main_sound": "sound_airbrake_on.ogg",
+            "pre_sound": null,
+            "priority": 2
+        },
+        {
+            "main_sound": "sound_airbrake_off.ogg",
+            "pre_sound": null,
+            "priority": 2
+        },
+        {
+            "main_sound": "sound_gear_on.ogg",
+            "pre_sound": null,
+            "priority": 2
+        },
+        {
+            "main_sound": "sound_gear_off.ogg",
+            "pre_sound": null,
+            "priority": 2
+        },
+        {
+            "main_sound": "sound_touchdown_nose.ogg",
+            "pre_sound": null,
+            "priority": 3
+        },
+        {
+            "main_sound": "_presound_piu.ogg",
+            "pre_sound": null,
+            "priority": 4
+        },
+        {
+            "main_sound": "value_0010.ogg",
+            "pre_sound": "_presound_piu.ogg",
+            "priority": 4
+        }
+    ]
+}

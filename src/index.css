@@ -44,9 +44,10 @@ color: #9FEAF9;
     bottom: 0;
     left: 0;
     width: 100%;
-
     display: flex;
     flex-direction: column;
+    border: #e8e8e8 solid 1px;
+    border-top: none;
 }
 
 .pad-left {
@@ -62,20 +63,14 @@ color: #9FEAF9;
     min-height: 0;
 }
 
-.table-heading {
-    padding: 10px;
-    padding-right: 16px; /* compensate for scrollbar */
-    background: #F7F8F9;
-    border-top: #000 1px solid;
-    font-weight: bold;
-}
-
 .scrollable-content {
     flex-grow: 1; 
     overflow: auto;
 
     /* for Firefox */
     min-height: 0;
+
+    overflow-y: overlay; /* scroll bar will not mess the content up!  */
 }
 
 .h50 {
@@ -94,14 +89,6 @@ color: #9FEAF9;
     flex-grow: 1;
     flex-shrink: 0;
 }
-
-.table-item {
-    box-sizing: border-box;
-    margin: 20px;
-    margin-left: 0;
-    margin-right: 0;
-}
-
 
 ::-webkit-scrollbar {
     width: 16px;

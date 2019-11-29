@@ -78,6 +78,10 @@ const config_electron_react_renderer = (env, argv) => {
           from: 'src/index.html',
           to: ''
         },
+        {
+          from: 'src/sounds/',
+          to: 'sounds/'
+        }
       ]),
     ]
   }

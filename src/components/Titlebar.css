@@ -1,0 +1,105 @@
+@font-face {
+    font-family: "SegoeUI MDL2 Assets";
+    font-style: normal;
+    font-weight: normal;
+    src: url("../fonts/SegMDL2.ttf") format("truetype");
+
+}
+
+#titlebar {
+    display: block;
+    position: fixed;
+    height: 32px;
+    width: calc(100% - 0px); /*Compensate for body 1px border*/
+    /* background: #254053; */
+    color: #74B1BE;
+}
+
+
+#titlebar #drag-region {
+    width: 100%;
+    height: 100%;
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+}
+
+#window-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 46px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    font-family: "SegoeUI MDL2 Assets";
+    font-size: 10px;
+}
+
+#window-controls .button {
+    grid-row: 1 / span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#window-controls #min-button {
+    grid-column: 1;
+}
+
+#window-controls #max-button, #window-controls #restore-button {
+    grid-column: 2;
+}
+
+#window-controls #close-button {
+    grid-column: 3;
+}
+
+#window-controls {
+    -webkit-app-region: no-drag;
+}
+
+#window-controls .button {
+    user-select: none;
+    cursor: default;
+}
+#window-controls .button:hover {
+    background: rgba(255,255,255,0.1);
+}
+#window-controls .button:active {
+    background: rgba(255,255,255,0.2);
+}
+
+#close-button:hover {
+    color: #fff;
+    background: #E81123 !important;
+}
+#close-button:active {
+    background: #f1707a !important;
+    color: #000;
+}
+
+#restore-button {
+    display: none !important;
+}
+
+#titlebar #drag-region {
+    display: grid;
+    grid-template-columns: auto 138px;
+}
+
+#window-title {
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: "Segoe UI", sans-serif;
+}
+
+#window-title span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+}
