@@ -11,16 +11,33 @@
     position: fixed;
     height: 32px;
     width: calc(100% - 0px); /*Compensate for body 1px border*/
-    /* background: #254053; */
-    color: #74B1BE;
+    background: #24292E;
+    color: #7E959E;
 }
-
 
 #titlebar #drag-region {
     width: 100%;
     height: 100%;
     -webkit-app-region: drag;
     -webkit-user-select: none;
+}
+
+#window-resize-top {
+    -webkit-app-region: no-drag;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 6px;
+}
+
+#window-resize-left {
+    -webkit-app-region: no-drag;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
 }
 
 #window-controls {
@@ -35,6 +52,7 @@
 }
 
 #window-controls .button {
+    color: #989898;
     grid-row: 1 / span 1;
     display: flex;
     justify-content: center;
@@ -83,16 +101,28 @@
     display: none !important;
 }
 
+.maximized #restore-button {
+    display: flex !important;
+}
+
+.maximized #max-button {
+    display: none;
+}
+
 #titlebar #drag-region {
     display: grid;
     grid-template-columns: auto 138px;
 }
 
 #window-title {
-    grid-column: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
-    margin-left: 12px;
+    justify-content: center;
     overflow: hidden;
     white-space: nowrap;
     font-family: "Segoe UI", sans-serif;
@@ -102,4 +132,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5;
+}
+
+#window-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 46px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "SegoeUI MDL2 Assets";
+    font-size: 20px;
 }

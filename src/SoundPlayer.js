@@ -16,11 +16,9 @@ class Sound extends EventTarget {
         this.playing = false;
         this.looped = false;
         this.volume = 0;
-        this.stopped = false;
     }
 
     play(volume, looped) {
-        this.stopped = false;
 
         if (this.playing === false) {
             this.volume = volume;
@@ -54,16 +52,7 @@ class Sound extends EventTarget {
     stop() {
         if(this.playing === true) {
             this.current_howl.stop(this.sound_id);
-            this.playing = false;
-            this._notify_stop(); // notify gui
         }
-
-        // remove event listeners just in case
-        this.main_howl.on('end', null); 
-        if(this.pre_howl)
-            this.pre_howl.on('end', null);
-
-        this.stopped = true;
     }
 
     _play_presound() {
@@ -73,12 +62,15 @@ class Sound extends EventTarget {
         this.current_howl = this.pre_howl;
         this.playing = true;
 
+        this.pre_howl.once('stop', () => {
+            this.playing = false;
+            this.pre_howl.off('end', this.sound_id); // remove event listener
+            this._notify_stop();
+        }, this.sound_id)
+
         // when presound finishes
         this.pre_howl.once('end', () => {
-            if (this.stopped) { // if manually stopped -> dont play main sound
-                this.playing = false;
-                return;
-            }
+            this.pre_howl.off('stop', this.sound_id);
 
             // play main sound
             this._play_main_sound();
@@ -93,11 +85,18 @@ class Sound extends EventTarget {
         this.current_howl = this.main_howl;
         this.playing = true;
 
+        this.main_howl.once('stop', () => {
+            this.playing = false;
+            this.main_howl.off('end', this.sound_id); // remove event listener
+            this._notify_stop();
+        }, this.sound_id)
+
         // when main finishes
         this.main_howl.on('end', () => {
             if(this.main_howl.loop(this.sound_id) === false) {
                 this.playing = false;
-                this.main_howl.on('end', null); // remove event listener
+                this.main_howl.off('end', this.sound_id);  // remove event listener
+                this.main_howl.off('stop', this.sound_id); // remove event listener
                 this._notify_stop();
             }
             

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Log from './components/Log'
 import {Tag, Icon} from 'antd'
 import MyTable from './components/MyTable'
-const customTitlebar = require('custom-electron-titlebar')
+import Titlebar from './components/Titlebar'
 const app = require('electron').remote.app
 
 import soundServer from './SoundServer'
@@ -15,9 +15,10 @@ import soundPlayer from './SoundPlayer'
 // https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336
 
 // install custom title bar
-new customTitlebar.Titlebar({
-  backgroundColor: customTitlebar.Color.fromHex('#24292E')
-});
+// const customTitlebar = require('custom-electron-titlebar')
+// new customTitlebar.Titlebar({
+//   backgroundColor: customTitlebar.Color.fromHex('#FF292E')
+// });
 
 soundServer.on('play', (time, sounds) => {
   soundPlayer.play_sounds(sounds);
@@ -86,7 +87,7 @@ const App = () => {
       main: data.sound.main_name,
       pre: data.sound.pre_name,
       cur: data.is_presound ? 'pre' : 'main',
-      vol: data.sound.volume * 100,
+      vol: Math.trunc(data.sound.volume * 100),
       loop: data.sound.looped
     };
 
@@ -101,7 +102,7 @@ const App = () => {
 
   const onVolume = (e) => {
     const idx = e.detail.sound.idx;
-    const volume = e.detail.sound.volume * 100;
+    const volume = Math.trunc(e.detail.sound.volume * 100);
 
     setSounds(sounds =>
       sounds.map(sound => sound.key === idx ? { ...sound, vol: volume } : sound)
@@ -149,20 +150,18 @@ const App = () => {
     }
   }, [sounds]);
 
-  return (
-    <div className='container'>
+  return ([
+    <Titlebar key={1}/>,
+    <div className='container' key={2}>
       <MyTable
         className='section h60'
-        locale={{ emptyText: ' ' }}
         dataSource={sounds}
         columns={columns}
-        pagination={false}
-        scroll={{ y: true }}
       />
       <div className='divider flex_no_shrink' />
       <Log className='h30 scrollable-content pad-left' />
     </div>
-  )
+  ])
 }
 
 export default App

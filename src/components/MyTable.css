@@ -1,6 +1,8 @@
 
 .table-heading {
     padding: 10px;
+    padding-left:  0px;
+    padding-right: 0px;
     background: #F7F8F9;
     font-weight: bold;
 }

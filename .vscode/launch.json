@@ -8,7 +8,6 @@
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
       "program": "${workspaceRoot}/src/electron.js",
       "skipFiles": [
-        "<node_internals>/**"
       ]
     },
     {

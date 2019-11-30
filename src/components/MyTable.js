@@ -25,7 +25,7 @@ const MyTable = (props) => {
         key={row.key}
         unmountOnExit
       >
-        <Row className='table-item pad-left'>
+        <Row className='table-item'>
           {
             keys_renders.map(([key, render], index) =>
               <Col span={colsizes[index]} key={key} className='table-col'>{(render) ? render(row) : row[key]}</Col>
@@ -38,10 +38,10 @@ const MyTable = (props) => {
 
   return (
     <div className={props.className}>
-      <Row className='table-heading'>
+      <Row className='table-heading pad-left'>
         {column_headers}
       </Row>
-      <TransitionGroup className='scrollable-content'>
+      <TransitionGroup className='scrollable-content pad-left'>
         {data_rows}
       </TransitionGroup>
     </div>

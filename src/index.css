@@ -10,6 +10,10 @@ html, body {
 
 }
 
+.titlebar, .titlebar > * {
+    color: #999999;
+}
+
 .divider {
     height: 1px;
     background: #e8e8e8;
@@ -40,7 +44,7 @@ color: #9FEAF9;
 .container {
 /* give the outermost container a predefined size */
     position: absolute;
-    top: 0;
+    top: 32px;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -51,7 +55,7 @@ color: #9FEAF9;
 }
 
 .pad-left {
-    padding-left: 10px;
+    padding-left: 20px;
 }
 
 .section {
