@@ -97,18 +97,6 @@
     color: #000;
 }
 
-#restore-button {
-    display: none !important;
-}
-
-.maximized #restore-button {
-    display: flex !important;
-}
-
-.maximized #max-button {
-    display: none;
-}
-
 #titlebar #drag-region {
     display: grid;
     grid-template-columns: auto 138px;

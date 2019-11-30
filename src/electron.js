@@ -4,7 +4,7 @@ const path = require('path')
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-let mainWindow = null;
+let mainWindow = null; // global to avoid being gc'ed
 
 function createWindow() {
   mainWindow = new BrowserWindow({

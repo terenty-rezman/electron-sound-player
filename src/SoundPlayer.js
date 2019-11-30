@@ -38,9 +38,9 @@ class Sound extends EventTarget {
             // if currently playing howl is main then change looped otherwise wait until main is current
             if (this.current_howl === this.main_howl) {
                 this.main_howl.loop(looped, this.sound_id);
-                this.looped = looped;
-                this._notify_loop(); // notify gui
             }
+            this.looped = looped;
+            this._notify_loop(); // notify gui
         } // when playing and not looped
         else {
             this._set_volume(volume);
@@ -212,7 +212,7 @@ class SoundPlayer extends EventTarget {
                 }
             }
             else {
-                console.log(`index exeeds lound list size ${index}`);
+                console.log(`index (${index}) exceeds sound list size (${this.my_sounds.length})`);
             }
         })
     }

@@ -2,7 +2,6 @@ import React from 'react'
 import { Row, Col } from 'antd'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
-
 import './MyTable.css'
 
 const MyTable = (props) => {

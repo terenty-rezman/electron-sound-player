@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-
+import React, { useEffect, useState } from 'react'
 
 import './Titlebar.css'
 
@@ -8,35 +7,32 @@ import './Titlebar.css'
 
 const remote = require('electron').remote;
 
-let win = null; // just in case it might get gc'ed but im not sure if this is possible
+let win = null; // global just in case it might get gc'ed but im not sure if this is possible
+
+const maximize = () => {
+  win.maximize();
+}
+
+const minimize = () => {
+  win.minimize();
+}
+
+const restore = () => {
+  win.unmaximize();
+}
+
+const close = () => {
+  win.close();
+}
 
 const Titlebar = () => {
+  const [maximized, setMaximized] = useState(false);
 
-  const maximize = () => {
-    win.maximize();
-  }
-
-  const minimize = () => {
-    win.minimize();
-  }
-
-  const restore = () => {
-    win.unmaximize();
-  }
-
-  const close = () => {
-    win.close();
-  }
-
-  // not react style but im being too lazy to fix
   const toggleMaxRestoreButtons = () => {
-    const titlebar = document.getElementById('titlebar');
-
-    if (win.isMaximized()) {
-      titlebar.classList.add('maximized');
-    } else {
-      titlebar.classList.remove('maximized');
-    }
+    if (win.isMaximized())
+      setMaximized(true);
+    else
+      setMaximized(false);
   }
 
   // on first mount
@@ -50,7 +46,19 @@ const Titlebar = () => {
       win.removeListener('unmaximize', toggleMaxRestoreButtons);
       win = null;
     }
-  }, [])
+  }, []);
+
+  const middleButton =
+    maximized
+      ?
+      <div className="button" id="restore-button" onClick={restore}>
+        <span>{'\ue923'}</span>
+      </div>
+      :
+      <div className="button" id="max-button" onClick={maximize}>
+        <span>{'\ue922'}</span>
+      </div>
+  ;
 
   return (
     <header id="titlebar">
@@ -67,12 +75,7 @@ const Titlebar = () => {
           <div className="button" id="min-button" onClick={minimize}>
             <span>{'\ue921'}</span>
           </div>
-          <div className="button" id="max-button" onClick={maximize}>
-            <span>{'\ue922'}</span>
-          </div>
-          <div className="button" id="restore-button" onClick={restore}>
-            <span>{'\ue923'}</span>
-          </div>
+          {middleButton}
           <div className="button" id="close-button" onClick={close}>
             <span>{'\ue8bb'}</span>
           </div>
