@@ -18,7 +18,7 @@ html, body {
 .container {
 /* give the outermost container a predefined size */
     position: absolute;
-    top: 32px;
+    top: calc(32px); /* titlebar */
     bottom: 0;
     left: 0;
     width: 100%;
@@ -48,6 +48,7 @@ html, body {
 }
 
 .divider {
+    position: relative;
     height: 1px;
     background: #e8e8e8;
 }
