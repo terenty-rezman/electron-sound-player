@@ -156,6 +156,18 @@ class SoundPlayer extends EventTarget {
         )
     }
 
+    getMasterVolume() {
+        return Math.trunc(Howler.volume() * 100);
+    }
+
+    setMasterVolume(volume) {
+        Howler.volume(volume / 100);
+    }
+
+    setMasterMuted(muted) {
+        Howler.mute(muted);
+    }
+
     readConfig(configFileName, soundDir) {
         const config = JSON.parse(fs.readFileSync(configFileName, 'utf8'));
 

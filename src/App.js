@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Log from './components/Log'
-import {Tag, Icon} from 'antd'
+import { Tag, Icon } from 'antd'
 import MyTable from './components/MyTable'
 import Titlebar from './components/Titlebar'
 import ControlPanel from './components/ControlPanel'
@@ -160,7 +160,12 @@ const App = () => {
         columns={columns}
       />
       <div className='divider flex_no_shrink'>
-        <ControlPanel key={2} /> 
+        <ControlPanel
+          key={2}
+          getMasterVolume={soundPlayer.getMasterVolume}
+          setMasterVolume={soundPlayer.setMasterVolume}
+          setMasterMuted={soundPlayer.setMasterMuted}
+        />
       </div>
       <Log className='h30 scrollable-content pad-left' />
     </div>
