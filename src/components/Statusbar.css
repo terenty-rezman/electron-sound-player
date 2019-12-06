@@ -1,0 +1,27 @@
+
+.status-bar {
+    position: absolute;
+    left: 0;
+    right: 20px;
+    bottom: 5px;
+    height: 26px;
+    /* background: #F7F8F9;
+    border: #e8e8e8 solid 1px; */
+    border-top: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+
+.status-bar .item {
+    /* margin-left: 20px;
+    margin-right: 20px; */
+    margin: 0 6px;
+    padding: .2em .4em;
+    background: #f2f4f5;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    color: #314659;
+    font-size: .9em;
+}

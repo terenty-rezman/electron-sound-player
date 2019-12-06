@@ -4,7 +4,7 @@
     /* background:rgba(255, 255, 255, 1); */
     /* box-shadow: 0 4px 12px rgba(0,0,0,0.15); */
     position: absolute;
-    right: 80px;
+    right: 20px;
     width: auto;
     height: auto;
     transform: translateY(-50%);
@@ -30,6 +30,25 @@
     border-color: rgba(0,0,0,0.25);
 } */
 
+.ant-tooltip {
+    z-index: 100;
+}
+
+.ant-tooltip-inner {
+    color: #ff4d4f;
+    /* background-color: transparent;
+    box-shadow: none; */
+}
+
+/* .ant-tooltip-placement-bottom .ant-tooltip-arrow, .ant-tooltip-placement-bottomLeft .ant-tooltip-arrow, .ant-tooltip-placement-bottomRight .ant-tooltip-arrow {
+    border-bottom-color: transparent;
+    border: none;
+} */
+
+/* .ant-tooltip-arrow::before {
+    visibility: hidden;
+} */
+
 .icon {
     font-size: 20px;
     font-family: "SegoeUI MDL2 Assets";
@@ -44,6 +63,7 @@
     border: #d9d9d9 1px solid;
     border-radius: 4px;
     padding: 0 15px;
+    margin: 0 6px;
     font-size: 14px;
     line-height: 1.5;
     height: 32px;
@@ -70,4 +90,8 @@
     color: #fff;
     background: #ff4d4f;
     border-color: #ff4d4f;
+}
+
+.warning-mute {
+    position: absolute;
 }

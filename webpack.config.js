@@ -8,6 +8,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 // it's only used to set global environment variable WEBPACK_MODE
 const config_electron_main = (env, argv) => {
   const mode = argv.mode;
+
   return {
     target: 'electron-main', // for files that should be compiled for electron main process
     entry: ['./src/electron.js'],
@@ -28,9 +29,11 @@ const config_electron_main = (env, argv) => {
 
 // build configuration for react files
 const config_electron_react_renderer = (env, argv) => {
+  const mode = argv.mode;
+
   return {
     // for files that should be compiled for electron renderer process
-    target: 'electron-renderer', 
+    target: 'electron-renderer',
     // no need for polyfill for electron projects
     // as we targeting chrome anyway
     entry: [/*'@babel/polyfill',*/  './src/index.js'],
@@ -54,7 +57,16 @@ const config_electron_react_renderer = (env, argv) => {
           query: {
             // presence of @babel/preset-env is also questionable
             // as we targeting chrome
-            presets: ['@babel/preset-env' ,'@babel/preset-react'],
+            presets: [
+              [
+                '@babel/preset-env', {
+                  "targets": {
+                    "node": "current" // this fixes async/await error
+                  }
+                }
+              ],
+              '@babel/preset-react'
+            ],
             plugins: [
               ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }], // `style: true` for less
               '@babel/plugin-proposal-class-properties'
@@ -65,9 +77,9 @@ const config_electron_react_renderer = (env, argv) => {
           test: /\.css$/,
           loaders: ['style-loader', 'css-loader'],
         },
-        { 
-          test: /\.(png|woff|woff2|eot|ttf|svg)$/, 
-          loader: 'url-loader?limit=100000' 
+        {
+          test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+          loader: 'url-loader?limit=100000'
         }
       ],
     },
@@ -83,6 +95,11 @@ const config_electron_react_renderer = (env, argv) => {
           to: 'sounds/'
         }
       ]),
+      new webpack.DefinePlugin({
+        'process.env': {
+          'WEBPACK_MODE': JSON.stringify(mode)
+        }
+      })
     ]
   }
 }

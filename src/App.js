@@ -3,8 +3,10 @@ import Log from './components/Log'
 import { Tag, Icon } from 'antd'
 import MyTable from './components/MyTable'
 import Titlebar from './components/Titlebar'
+import Statusbar from './components/Statusbar'
 import ControlPanel from './components/ControlPanel'
-const app = require('electron').remote.app
+
+import paths from './paths'
 
 import soundServer from './SoundServer'
 import soundPlayer from './SoundPlayer'
@@ -129,8 +131,9 @@ const App = () => {
 
   // setup sound player & sound server on first render
   useEffect(() => {
-    const dir = app.getAppPath();
-    soundPlayer.readConfig(dir + '/sounds/sound_list.json', './sounds/');
+    const dir = paths.getWorkingDir();
+
+    soundPlayer.readConfig(dir + '/sounds/sound_list.json', dir + '/sounds/');
     soundServer.bind(4455);
   }, []);
 
@@ -153,7 +156,7 @@ const App = () => {
 
   return ([
     <Titlebar key={1} />,
-    <div className='container' key={3}>
+    <div className='container' key={2}>
       <MyTable
         className='section h60'
         dataSource={sounds}
@@ -161,14 +164,14 @@ const App = () => {
       />
       <div className='divider flex_no_shrink'>
         <ControlPanel
-          key={2}
-          getMasterVolume={soundPlayer.getMasterVolume}
+          masterVolume={soundPlayer.getMasterVolume()}
           setMasterVolume={soundPlayer.setMasterVolume}
           setMasterMuted={soundPlayer.setMasterMuted}
         />
       </div>
       <Log className='h30 scrollable-content pad-left' />
-    </div>
+    </div>,
+    <Statusbar key={3}/>
   ])
 }
 

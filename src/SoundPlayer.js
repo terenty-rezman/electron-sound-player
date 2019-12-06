@@ -1,6 +1,34 @@
 import { Howler, Howl } from 'howler'
+import { func } from 'prop-types';
 
+const util = require('util');
 const fs = require('fs');
+
+const readFile = util.promisify(fs.readFile);
+
+function blobToURL(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.addEventListener('load', e => {
+            resolve(reader.result);
+        });
+
+        reader.addEventListener('error', e => {
+            reject(e);
+        })
+
+        reader.readAsDataURL(blob);
+    });
+};
+
+async function loadFileAsURL(src) {
+    const buffer = await readFile(src);    // node fs returns buffer
+    const blob = new Blob([buffer]);       // create blob from buffer
+    return URL.createObjectURL(blob);
+    // const dataURL = await blobToURL(blob); // get url to Blob via FileReader
+    // return dataURL;
+}
 
 class Sound extends EventTarget {
     constructor(idx, main_howl, pre_howl, main_name, pre_name) {
@@ -19,6 +47,8 @@ class Sound extends EventTarget {
     }
 
     play(volume, looped) {
+        if (this.main_howl.state() !== 'loaded')
+            return;
 
         if (this.playing === false) {
             this.volume = volume;
@@ -50,7 +80,7 @@ class Sound extends EventTarget {
     }
 
     stop() {
-        if(this.playing === true) {
+        if (this.playing === true) {
             this.current_howl.stop(this.sound_id);
         }
     }
@@ -58,7 +88,7 @@ class Sound extends EventTarget {
     _play_presound() {
         // play presound first
         this.sound_id = this.pre_howl.play();
-        this.pre_howl.volume(this.volume, this.sound_id);      
+        this.pre_howl.volume(this.volume, this.sound_id);
         this.current_howl = this.pre_howl;
         this.playing = true;
 
@@ -93,67 +123,78 @@ class Sound extends EventTarget {
 
         // when main finishes
         this.main_howl.on('end', () => {
-            if(this.main_howl.loop(this.sound_id) === false) {
+            if (this.main_howl.loop(this.sound_id) === false) {
                 this.playing = false;
                 this.main_howl.off('end', this.sound_id);  // remove event listener
                 this.main_howl.off('stop', this.sound_id); // remove event listener
                 this._notify_stop();
             }
-            
+
         }, this.sound_id);
     }
 
     _set_volume(volume) {
-        if(this.volume !== volume) {
+        if (this.volume !== volume) {
             this.current_howl.volume(volume);
-            this.volume = volume;      
+            this.volume = volume;
             this._notify_volume();
         }
     }
 
     // started playback
-    _notify_play(sound_name, is_presound) { 
-        this.dispatchEvent(new CustomEvent('play', {detail: {is_presound, sound: this}}));
+    _notify_play(sound_name, is_presound) {
+        this.dispatchEvent(new CustomEvent('play', { detail: { is_presound, sound: this } }));
     }
 
     // main sound started to play after pre sound finished
-    _notify_main_sound() { 
-        this.dispatchEvent(new CustomEvent('main_sound', {detail: {sound: this}}));
+    _notify_main_sound() {
+        this.dispatchEvent(new CustomEvent('main_sound', { detail: { sound: this } }));
     }
 
     // looped state changed
     _notify_loop() {
-        this.dispatchEvent(new CustomEvent('loop', {detail: {sound: this}}));
+        this.dispatchEvent(new CustomEvent('loop', { detail: { sound: this } }));
     }
 
     _notify_volume() {
-        this.dispatchEvent(new CustomEvent('volume', {detail: {sound: this}}));
+        this.dispatchEvent(new CustomEvent('volume', { detail: { sound: this } }));
     }
 
     _notify_stop() {
-        this.dispatchEvent(new CustomEvent('stop', {detail: {sound: this}}));
+        this.dispatchEvent(new CustomEvent('stop', { detail: { sound: this } }));
     }
 }
 
 class SoundPlayer extends EventTarget {
     constructor() {
         super();
-        this.howls = new Map(); 
+        this.howls = new Map();
         this.my_sounds = [];
     }
 
-    static createHowl(soundName, soundDir) {
+    static async createHowl(soundName, soundDir) {
+        let dataUrl = null;
+
+        try {
+            dataUrl = await loadFileAsURL(soundDir + soundName);
+            console.log(`loaded ${soundName}`);
+        }
+        catch (e) {
+            console.log(`failed to load ${soundDir + soundName}`);
+        }
+
         return (
             new Howl({
-                src: [soundDir + soundName],
-                onloaderror: (e) => {
-                    console.log(e);
+                src: dataUrl,
+                format: soundName.split('.').pop().toLowerCase(),
+                onload: function() {
+                    URL.revokeObjectURL(dataUrl);
                 },
-                onload: (e) => {
-                    console.log(soundName + ' loaded');
+                onloaderror: function(id, msg) {
+                    console.log(msg);
                 }
             })
-        )
+        );
     }
 
     getMasterVolume() {
@@ -168,11 +209,11 @@ class SoundPlayer extends EventTarget {
         Howler.mute(muted);
     }
 
-    readConfig(configFileName, soundDir) {
+    async readConfig(configFileName, soundDir) {
         const config = JSON.parse(fs.readFileSync(configFileName, 'utf8'));
 
         // parse config file
-        config.sound_list.forEach((description, index) => {
+        await Promise.all(config.sound_list.map(async (description, index) => {
             const { main_sound, pre_sound } = description;
             let main_howl = null;
             let pre_howl = null;
@@ -180,7 +221,7 @@ class SoundPlayer extends EventTarget {
             // create howl for main sound
             if (this.howls.has(main_sound) === false) {
                 // create howl
-                main_howl = SoundPlayer.createHowl(main_sound, soundDir);
+                main_howl = await SoundPlayer.createHowl(main_sound, soundDir);
 
                 // store in map
                 this.howls.set(main_sound, main_howl);
@@ -203,22 +244,22 @@ class SoundPlayer extends EventTarget {
 
             const my_sound = new Sound(index, main_howl, pre_howl, main_sound, pre_sound);
             this.my_sounds.push(my_sound);
-        });
+        }));
 
         this._subscribe_to_sound_events();
     }
 
     play_sounds(sounds) {
         sounds.forEach((volume, index) => {
-            if(index < this.my_sounds.length) {
-                if(volume === 255) {
+            if (index < this.my_sounds.length) {
+                if (volume === 255) {
                     this.my_sounds[index].stop();
                 }
-                else if(0 < volume && volume <= 100) {
+                else if (0 < volume && volume <= 100) {
                     const floatVolume = volume / 100;
                     this.my_sounds[index].play(floatVolume, false); // play normal
                 }
-                else if(150 <= volume && volume <= 250) {
+                else if (150 <= volume && volume <= 250) {
                     const floatVolume = (volume - 150) / 100;
                     this.my_sounds[index].play(floatVolume, true); // play looped
                 }

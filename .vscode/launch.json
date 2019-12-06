@@ -6,7 +6,7 @@
       "request": "launch",
       "name": "Electron Main",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
-      "program": "${workspaceRoot}/src/electron.js",
+      "program": "${workspaceRoot}/build/electron.js",
       "skipFiles": [
       ]
     },
@@ -19,7 +19,7 @@
         "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
       },
       "runtimeArgs": [
-        "${workspaceRoot}/src/electron.js",
+        "${workspaceRoot}/build/electron.js",
         "--remote-debugging-port=9222"
       ],
       "webRoot": "${workspaceRoot}"
