@@ -1,71 +1,78 @@
 @font-face {
     font-family: "SegoeUI MDL2 Assets";
-    font-style: normal;
+    font-style : normal;
     font-weight: normal;
-    src: url("../fonts/SegMDL2.ttf") format("truetype");
-
+    src        : url("../fonts/SegMDL2.ttf") format("truetype");
 }
 
 #titlebar {
-    display: block;
+    display : block;
     position: fixed;
-    height: 32px;
-    width: calc(100% - 0px); /*Compensate for body 1px border*/
-    background: #24292E;
-    color: #7E959E;
+    height  : 32px;
+    /*Compensate for body 1px border*/
+    width     : calc(100% - 0px);
+    background: #001529;
+    /* #24292E; */
+    color: rgba(255, 255, 255, 0.65);
+    /* #7E959E; */
+    z-index: 100;
 }
 
 #titlebar #drag-region {
-    width: 100%;
-    height: 100%;
-    -webkit-app-region: drag;
-    -webkit-user-select: none;
+    display: grid;
+    /* icon menu controls */
+    grid-template-columns: 46px auto 138px;
+    width                : 100%;
+    height               : 100%;
+    -webkit-app-region   : drag;
+    -webkit-user-select  : none;
 }
 
 #window-resize-top {
     -webkit-app-region: no-drag;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 6px;
+    position          : absolute;
+    left              : 0;
+    right             : 0;
+    top               : 0;
+    height            : 6px;
 }
 
 #window-resize-left {
     -webkit-app-region: no-drag;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 6px;
+    position          : absolute;
+    left              : 0;
+    top               : 0;
+    bottom            : 0;
+    width             : 6px;
 }
 
 #window-controls {
-    display: grid;
+    display              : grid;
     grid-template-columns: repeat(3, 46px);
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    font-family: "SegoeUI MDL2 Assets";
-    font-size: 10px;
+    position             : absolute;
+    top                  : 0;
+    right                : 0;
+    height               : 100%;
+    font-family          : "SegoeUI MDL2 Assets";
+    font-size            : 10px;
 }
 
 #window-controls .button {
-    color: #989898;
-    grid-row: 1 / span 1;
-    display: flex;
+    color          : #989898;
+    grid-row       : 1 / span 1;
+    display        : flex;
     justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+    align-items    : center;
+    width          : 100%;
+    height         : 100%;
 }
 
 #window-controls #min-button {
     grid-column: 1;
 }
 
-#window-controls #max-button, #window-controls #restore-button {
+#window-controls #max-button,
+#window-controls #restore-button {
     grid-column: 2;
 }
 
@@ -79,58 +86,73 @@
 
 #window-controls .button {
     user-select: none;
-    cursor: default;
+    cursor     : default;
 }
+
 #window-controls .button:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
 }
+
 #window-controls .button:active {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 #close-button:hover {
-    color: #fff;
+    color     : #fff;
     background: #E81123 !important;
 }
+
 #close-button:active {
     background: #f1707a !important;
-    color: #000;
-}
-
-#titlebar #drag-region {
-    display: grid;
-    grid-template-columns: auto 138px;
+    color     : #000;
 }
 
 #window-title {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
+    position       : absolute;
+    top            : 0;
+    left           : 0;
+    right          : 0;
+    bottom         : 0;
+    display        : flex;
+    align-items    : center;
     justify-content: center;
-    overflow: hidden;
-    white-space: nowrap;
-    font-family: "Segoe UI", sans-serif;
+    overflow       : hidden;
+    white-space    : nowrap;
+    font-family    : "Segoe UI", sans-serif;
+    pointer-events : none;
 }
 
 #window-title span {
-    overflow: hidden;
+    overflow     : hidden;
     text-overflow: ellipsis;
-    line-height: 1.5;
+    line-height  : 1.5;
 }
 
 #window-icon {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 46px;
-    display: flex;
+    /* position    : absolute;
+    left           : 0;
+    top            : 0; */
+    height         : 100%;
+    width          : 46px;
+    display        : flex;
     justify-content: center;
+    align-items    : center;
+    font-family    : "SegoeUI MDL2 Assets";
+    font-size      : 20px;
+}
+
+#titlebar .menu {
+    display    : flex;
     align-items: center;
-    font-family: "SegoeUI MDL2 Assets";
-    font-size: 20px;
+}
+
+#titlebar .menu-item {
+    -webkit-app-region: no-drag;
+    line-height       : 32px;
+    padding-right     : 8px;
+    padding-left      : 8px;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.2);
 }

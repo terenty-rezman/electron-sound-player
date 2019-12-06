@@ -1,0 +1,31 @@
+.background-girl1 {
+    position           : absolute;
+    top                : 0;
+    bottom             : 0;
+    left               : 0;
+    right              : 0;
+    background         : url("../girls/1.png");
+    background-repeat  : no-repeat;
+    background-size    : auto;
+    background-position: right bottom;
+    opacity            : 0.8;
+}
+
+/* transitions for TransitionGroup */
+.appear-enter {
+    opacity: 0;
+}
+
+.appear-enter-active {
+    opacity   : 0.8;
+    transition: opacity 300ms ease-in-out;
+}
+
+.appear-exit {
+    opacity   : 0.8;
+}
+
+.appear-exit-active {
+    opacity   : 0;
+    transition: opacity 300ms ease-in-out;
+}

@@ -25,7 +25,7 @@ const close = () => {
   win.close();
 }
 
-const Titlebar = () => {
+const Titlebar = ({children}) => {
   const [maximized, setMaximized] = useState(false);
 
   const toggleMaxRestoreButtons = () => {
@@ -70,6 +70,9 @@ const Titlebar = () => {
         </div>
         <div id="window-title">
           Sound Player
+        </div>
+        <div className='menu'>
+          {children}
         </div>
         <div id="window-controls">
           <div className="button" id="min-button" onClick={minimize}>

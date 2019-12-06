@@ -31,7 +31,7 @@ async function loadFileAsURL(src) {
 }
 
 class Sound extends EventTarget {
-    constructor(idx, main_howl, pre_howl, main_name, pre_name) {
+    constructor(idx, main_howl, pre_howl, main_name, pre_name, priority) {
         super();
 
         this.idx = idx;
@@ -39,6 +39,7 @@ class Sound extends EventTarget {
         this.pre_howl = pre_howl;
         this.main_name = main_name;
         this.pre_name = pre_name;
+        this.priority = priority;
         this.current_howl = null;
         this.sound_id = null;
         this.playing = false;
@@ -170,6 +171,7 @@ class SoundPlayer extends EventTarget {
         super();
         this.howls = new Map();
         this.my_sounds = [];
+        this.time = 0;
     }
 
     static async createHowl(soundName, soundDir) {
@@ -187,10 +189,10 @@ class SoundPlayer extends EventTarget {
             new Howl({
                 src: dataUrl,
                 format: soundName.split('.').pop().toLowerCase(),
-                onload: function() {
+                onload: function () {
                     URL.revokeObjectURL(dataUrl);
                 },
-                onloaderror: function(id, msg) {
+                onloaderror: function (id, msg) {
                     console.log(msg);
                 }
             })
@@ -214,7 +216,7 @@ class SoundPlayer extends EventTarget {
 
         // parse config file
         await Promise.all(config.sound_list.map(async (description, index) => {
-            const { main_sound, pre_sound } = description;
+            const { main_sound, pre_sound, priority } = description;
             let main_howl = null;
             let pre_howl = null;
 
@@ -242,20 +244,50 @@ class SoundPlayer extends EventTarget {
                 }
             }
 
-            const my_sound = new Sound(index, main_howl, pre_howl, main_sound, pre_sound);
+            const my_sound = new Sound(index, main_howl, pre_howl, main_sound, pre_sound, priority);
             this.my_sounds.push(my_sound);
         }));
 
         this._subscribe_to_sound_events();
     }
 
-    play_sounds(sounds) {
-        sounds.forEach((volume, index) => {
-            if (index < this.my_sounds.length) {
-                if (volume === 255) {
-                    this.my_sounds[index].stop();
-                }
-                else if (0 < volume && volume <= 100) {
+    play_sounds(time, sounds) {
+        this.time = time;
+        this._notify_time();
+
+        const max_sounds = 4;
+        const priority_list = [];
+
+        // first form priority list of sounds to play
+        for (let i = 0; i < sounds.length; i++) {
+            if (i >= this.my_sounds.length) {
+                console.log(`index (${i}) exceeds sound list size (${this.my_sounds.length})`);
+                break;
+            }
+
+            priority_list.push({ index: i, priority: this.my_sounds[i].priority });
+        }
+
+        // sort list by priority
+        priority_list.sort((a, b) => {
+            if (a.priority > b.priority)
+                return -1;
+            else if (a.priority < b.priority)
+                return 1;
+            return 0;
+        })
+
+        // now play sounds from prioritized list up to max sounds
+        let playing_count = 0
+        for (let i = 0; i < priority_list.length; i++) {
+            const index = priority_list[i].index;
+            const volume = sounds[i];
+
+            if (volume === 255) {
+                this.m_sounds[i].stop();
+            }
+            else if (playing_count < max_sounds) {
+                if (0 < volume && volume <= 100) {
                     const floatVolume = volume / 100;
                     this.my_sounds[index].play(floatVolume, false); // play normal
                 }
@@ -263,46 +295,51 @@ class SoundPlayer extends EventTarget {
                     const floatVolume = (volume - 150) / 100;
                     this.my_sounds[index].play(floatVolume, true); // play looped
                 }
+                else 
+                    continue;
+
+                playing_count++;
             }
-            else {
-                console.log(`index (${index}) exceeds sound list size (${this.my_sounds.length})`);
-            }
-        })
+        }
     }
 
     _subscribe_to_sound_events() {
         this.my_sounds.forEach(my_sound => {
-            my_sound.addEventListener('play', this.onPlay);
-            my_sound.addEventListener('main_sound', this.onMainSound);
-            my_sound.addEventListener('loop', this.onLoop);
-            my_sound.addEventListener('volume', this.onVolume);
-            my_sound.addEventListener('stop', this.onStop);
+            my_sound.addEventListener('play', this._onPlay);
+            my_sound.addEventListener('main_sound', this._onMainSound);
+            my_sound.addEventListener('loop', this._onLoop);
+            my_sound.addEventListener('volume', this._onVolume);
+            my_sound.addEventListener('stop', this._onStop);
         })
     }
 
-    onPlay = (e) => {
-        console.log('onplay');
+    _onPlay = (e) => {
+        // console.log('onplay');
         this.dispatchEvent(new CustomEvent(e.type, e));
     }
 
-    onMainSound = (e) => {
-        console.log('onmainsound');
+    _onMainSound = (e) => {
+        // console.log('onmainsound');
         this.dispatchEvent(new CustomEvent(e.type, e));
     }
 
-    onLoop = (e) => {
-        console.log('onloop');
+    _onLoop = (e) => {
+        // console.log('onloop');
         this.dispatchEvent(new CustomEvent(e.type, e));
     }
 
-    onVolume = (e) => {
-        console.log('onvolume');
+    _onVolume = (e) => {
+        // console.log('onvolume');
         this.dispatchEvent(new CustomEvent(e.type, e));
     }
 
-    onStop = (e) => {
-        console.log('onstop');
+    _onStop = (e) => {
+        // console.log('onstop');
         this.dispatchEvent(new CustomEvent(e.type, e));
+    }
+
+    _notify_time() {
+        this.dispatchEvent(new CustomEvent('time', { detail: { time: this.time } }));
     }
 }
 

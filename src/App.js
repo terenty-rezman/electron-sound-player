@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Log from './components/Log'
-import { Tag, Icon } from 'antd'
+import { Tag, Icon, Dropdown, Menu } from 'antd'
 import MyTable from './components/MyTable'
 import Titlebar from './components/Titlebar'
 import Statusbar from './components/Statusbar'
 import ControlPanel from './components/ControlPanel'
+import Background from './components/Background'
 
 import paths from './paths'
 
@@ -17,14 +18,8 @@ import soundPlayer from './SoundPlayer'
 // main layout flex + scroll in children taken from:
 // https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336
 
-// install custom title bar
-// const customTitlebar = require('custom-electron-titlebar')
-// new customTitlebar.Titlebar({
-//   backgroundColor: customTitlebar.Color.fromHex('#FF292E')
-// });
-
 soundServer.on('play', (time, sounds) => {
-  soundPlayer.play_sounds(sounds);
+  soundPlayer.play_sounds(time, sounds);
 })
 
 const columns = [
@@ -32,7 +27,7 @@ const columns = [
     title: 'Channel',
     dataIndex: 'channel',
     key: 'channel',
-    size: 4
+    size: 3
   },
   {
     title: 'Main sound',
@@ -60,26 +55,39 @@ const columns = [
           :
           <Tag>{data.pre}</Tag>
         :
-        <span style={{ color: '#e8e8e8' }}>no</span>
+        <span style={{ /*color: '#999999'*/ }}>no</span>
   },
   {
     title: 'Volume',
     dataIndex: 'vol',
     key: 'vol',
-    size: 4
+    size: 3
   },
   {
     title: 'Looped',
     dataIndex: 'loop',
     key: 'loop',
-    size: 4,
+    size: 3,
     render: data =>
-      (data.loop) ? <Icon type="sync" spin /> : <Icon style={{ color: '#e8e8e8' }} type="stop" />
+      (data.loop) ? <Icon type="sync" spin /> : <span>no</span> /*<Icon style={{ color: '#999999' }} type="stop" />*/
+  },
+  {
+    title: 'Priority',
+    dataIndex: 'pri',
+    key: 'priority',
+    size: 3
   }
 ];
 
 const App = () => {
   const [sounds, setSounds] = useState([]); // sound list
+  const [address, setAddress] = useState(null); // udp sound server address it's listening on
+  const [udpTimeStamp, setUdpTimeStamp] = useState(0); // every udp received has some time stamp to indicate that something is going on
+  const [backgroundVisible, setBackgroundVisible] = useState(false);
+
+  const onListen = (e) => {
+    setAddress(soundServer.address());
+  }
 
   const onPlay = (e) => {
     const data = e.detail;
@@ -91,7 +99,8 @@ const App = () => {
       pre: data.sound.pre_name,
       cur: data.is_presound ? 'pre' : 'main',
       vol: Math.trunc(data.sound.volume * 100),
-      loop: data.sound.looped
+      loop: data.sound.looped,
+      priority: data.sound.priority
     };
 
     setSounds(sounds => sounds.concat(newEntry));
@@ -129,13 +138,14 @@ const App = () => {
     )
   }
 
-  // setup sound player & sound server on first render
-  useEffect(() => {
-    const dir = paths.getWorkingDir();
+  const onTime = (e) => {
+    const time = e.detail.time;
+    setUdpTimeStamp(time);
+  }
 
-    soundPlayer.readConfig(dir + '/sounds/sound_list.json', dir + '/sounds/');
-    soundServer.bind(4455);
-  }, []);
+  const handleBackgroundVisible = () => {
+    setBackgroundVisible(visible => !visible);
+  }
 
   // setup event listeners 
   useEffect(() => {
@@ -144,6 +154,9 @@ const App = () => {
     soundPlayer.addEventListener('volume', onVolume);
     soundPlayer.addEventListener('main_sound', onMain);
     soundPlayer.addEventListener('loop', onLoop);
+    soundPlayer.addEventListener('time', onTime);
+
+    soundServer.addListener('listening', onListen);
 
     return () => {
       soundPlayer.removeEventListener('play', onPlay);
@@ -151,12 +164,40 @@ const App = () => {
       soundPlayer.removeEventListener('volume', onVolume);
       soundPlayer.removeEventListener('main_sound', onMain);
       soundPlayer.removeEventListener('loop', onLoop);
+      soundPlayer.removeEventListener('time', onTime);
+
+      soundServer.removeListener('listening', onListen);
     }
-  }, [sounds]);
+  }, []);
+
+  // setup sound player & sound server on first render
+  useEffect(() => {
+    const dir = paths.getWorkingDir();
+
+    soundPlayer.readConfig(dir + '/sounds/sound_list.json', dir + '/sounds/');
+    soundServer.bind(4455);
+  }, []);
+
+  const menu = (
+    <Menu theme="dark">
+      <Menu.Item>
+        <a href="#" onClick={handleBackgroundVisible}>
+          {backgroundVisible ? <Icon type="check" /> : null} Show Background
+        </a>
+      </Menu.Item>
+    </Menu>
+  );
 
   return ([
-    <Titlebar key={1} />,
-    <div className='container' key={2}>
+    <Titlebar key={1}>
+      <Dropdown overlay={menu} trigger={['click']}>
+        <span className="menu-item">
+          File
+        </span>
+      </Dropdown>
+    </Titlebar>,
+    <Background visible={backgroundVisible} key={2} />,
+    <div className='container' key={3}>
       <MyTable
         className='section h60'
         dataSource={sounds}
@@ -169,9 +210,9 @@ const App = () => {
           setMasterMuted={soundPlayer.setMasterMuted}
         />
       </div>
-      <Log className='h30 scrollable-content pad-left' />
+      <Log className='h30 scrollable-content pad-left log' />
     </div>,
-    <Statusbar key={3}/>
+    <Statusbar address={address} time={udpTimeStamp} key={4} />
   ])
 }
 

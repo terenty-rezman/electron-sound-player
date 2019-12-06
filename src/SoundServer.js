@@ -26,7 +26,7 @@ server.on('message', (msg, rinfo) => {
         return;
     }
 
-    console.log(`msg from ${rinfo.address}:${rinfo.port}`);
+    // console.log(`msg from ${rinfo.address}:${rinfo.port}`);
 
     const [time, sound_array] = unpackMsg(msg);
     server.emit('play', time, sound_array);

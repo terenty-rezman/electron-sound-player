@@ -52,7 +52,7 @@ const Log = (props) => {
 
     return (
         <div {...props} >
-            <div className='log'>{messages.join('\n')}</div>
+            <div className=''>{messages.join('\n')}</div>
             <div ref={messagesEndRef} />
         </div>
     )

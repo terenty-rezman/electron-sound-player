@@ -93,6 +93,10 @@ const config_electron_react_renderer = (env, argv) => {
         {
           from: 'src/sounds/',
           to: 'sounds/'
+        },
+        {
+          from: 'src/girls/',
+          to: 'girls/'
         }
       ]),
       new webpack.DefinePlugin({

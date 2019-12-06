@@ -5,11 +5,13 @@ import './Statusbar.css'
 import {Typography, Tag, Icon} from 'antd'
 const { Text } = Typography;
 
-const Statusbar = () => {
+const Statusbar = ({address, time}) => {
+    const address_str = address ? ` ${address.address}:${address.port}` : null;
+
     return (
         <div className='status-bar'>
-            <span color="" className="item"><Icon type="meh" /> 119.23</span>
-            <span color="" className="item"><Icon type="link" /> 0.0.0.0:4455</span>
+            <span color="" className="item"><Icon type="meh" /> {time}</span>
+            <span color="" className="item"><Icon type="link" />{address_str}</span>
             <span color="" className="item"><Icon type="bell" /> 10</span>
         </div>
     )
