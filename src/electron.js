@@ -22,9 +22,24 @@ function createWindow() {
   });
 
   mainWindow.once('ready-to-show', () => {
-    // disable default menu + default hotkeys when in production
-    if (process.env.WEBPACK_MODE === 'production')
-      Menu.setApplicationMenu(null);
+    // disable default menu + default hotkeys when in production & leave only devtools
+    if (process.env.WEBPACK_MODE === 'production') {
+      var menu = Menu.buildFromTemplate([
+        {
+          label: 'Menu',
+          submenu: [
+            {
+              label: 'Developer tools',
+              click() {
+                mainWindow.webContents.openDevTools();
+              },
+              accelerator: 'CmdOrCtrl+Shift+I'
+            }
+          ]
+        }
+      ])
+      Menu.setApplicationMenu(menu);
+    }
 
     mainWindow.show();
   });

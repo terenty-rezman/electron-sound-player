@@ -15,8 +15,14 @@ function getWorkingDir() {
 }
 
 function readSettingsFile(src) {
-    const settings = JSON.parse(fs.readFileSync(src, 'utf8'));
-    return settings;
+    try {
+        const settings = JSON.parse(fs.readFileSync(src, 'utf8'));
+        return settings;
+    }
+    catch(e) {
+        console.log(e);
+        return null;
+    }
 }
 
 const utils = {getWorkingDir, readSettingsFile};

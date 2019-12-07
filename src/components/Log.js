@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react'
 import './Log.css'
 
+import { Alert } from 'antd'
+
 class ConsoleInterceptor {
     constructor() {
         this.old_log = console.log;
@@ -50,9 +52,23 @@ const Log = (props) => {
 
     useEffect(scrollToBottom, [messages]);
 
+    const items = messages.map( (message, index) => {
+        if(message.includes('Error')) {
+            return ([
+                <Alert message={message} type="error" showIcon />,
+                <br />
+            ])
+        }
+        else {
+            return (
+                <div>{message}</div>
+            )
+        }
+    })
+
     return (
         <div {...props} >
-            <div className=''>{messages.join('\n')}</div>
+            <div className=''>{items}</div>
             <div ref={messagesEndRef} />
         </div>
     )

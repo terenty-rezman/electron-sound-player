@@ -95,12 +95,13 @@ const config_electron_react_renderer = (env, argv) => {
           to: 'sounds/'
         },
         {
-          from: 'src/girls/',
-          to: 'girls/'
-        },
-        {
           from: 'src/settings.json',
           to: ''
+        },
+        {
+          from: 'src/icons/',
+          to: '',
+          ignore: ['*.png']
         },
       ]),
       new webpack.DefinePlugin({

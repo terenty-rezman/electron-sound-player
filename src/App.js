@@ -20,6 +20,8 @@ const remote = require('electron').remote;
 // main layout flex + scroll in children taken from:
 // https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336
 
+// setting app icon https://github.com/electron-userland/electron-builder/issues/2577#issuecomment-384690260
+
 let win = null; // global just in case it might get gc'ed but im not sure if this is possible
 
 soundServer.on('play', (time, sounds) => {
@@ -181,12 +183,21 @@ const App = () => {
   // setup sound player & sound server on first render
   useEffect(() => {
     const dir = utils.getWorkingDir();
-    const settings = utils.readSettingsFile(dir + '/settings.json');
+    let settings = utils.readSettingsFile(dir + '/settings.json');
 
-    soundPlayer.setMaxSounds(settings.max_sounds);
+    if(!settings) {
+      settings = {
+        listen_address: "0.0.0.0",
+        listen_port: 4455,
+        max_sounds: 10
+      }
+    }
+
+    soundPlayer.setMaxSounds(settings.max_sounds );
+
     soundPlayer.loadSoundFiles(dir + '/sounds/sound_list.json', dir + '/sounds/');
-    
     soundServer.bind(settings.listen_port, settings.listen_address);
+
   }, []);
 
   // get current browser window

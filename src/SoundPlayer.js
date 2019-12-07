@@ -183,7 +183,7 @@ class SoundPlayer extends EventTarget {
             console.log(`loaded ${soundName}`);
         }
         catch (e) {
-            console.log(`failed to load ${soundDir + soundName}`);
+            console.log(`Error: failed to load ${soundDir + soundName}`);
         }
 
         return (
@@ -217,43 +217,48 @@ class SoundPlayer extends EventTarget {
     }
 
     async loadSoundFiles(soundlistFileName, soundDir) {
-        const config = JSON.parse(fs.readFileSync(soundlistFileName, 'utf8'));
+        try {
+            const config = JSON.parse(fs.readFileSync(soundlistFileName, 'utf8'));
 
-        // parse config file
-        await Promise.all(config.sound_list.map(async (description, index) => {
-            const { main_sound, pre_sound, priority } = description;
-            let main_howl = null;
-            let pre_howl = null;
+            // parse config file
+            await Promise.all(config.sound_list.map(async (description, index) => {
+                const { main_sound, pre_sound, priority } = description;
+                let main_howl = null;
+                let pre_howl = null;
 
-            // create howl for main sound
-            if (this.howls.has(main_sound) === false) {
-                // create howl
-                main_howl = await SoundPlayer.createHowl(main_sound, soundDir);
+                // create howl for main sound
+                if (this.howls.has(main_sound) === false) {
+                    // create howl
+                    main_howl = await SoundPlayer.createHowl(main_sound, soundDir);
 
-                // store in map
-                this.howls.set(main_sound, main_howl);
-            }
-            else {
-                console.log(`sound ${main_sound} already exists in ${soundlistFileName} !`);
-                main_howl = this.howls.get(main_sound);
-            }
-
-            // if presound exists create howl for pre sound
-            if (pre_sound) {
-                if (this.howls.has(pre_sound) === false) {
-                    pre_howl = SoundPlayer.createHowl(pre_sound, soundDir);
-                    this.howls.set(pre_sound, pre_howl);
+                    // store in map
+                    this.howls.set(main_sound, main_howl);
                 }
                 else {
-                    pre_howl = this.howls.get(pre_sound);
+                    console.log(`sound ${main_sound} already exists in ${soundlistFileName} !`);
+                    main_howl = this.howls.get(main_sound);
                 }
-            }
 
-            const my_sound = new Sound(index, main_howl, pre_howl, main_sound, pre_sound, priority);
-            this.my_sounds.push(my_sound);
-        }));
+                // if presound exists create howl for pre sound
+                if (pre_sound) {
+                    if (this.howls.has(pre_sound) === false) {
+                        pre_howl = SoundPlayer.createHowl(pre_sound, soundDir);
+                        this.howls.set(pre_sound, pre_howl);
+                    }
+                    else {
+                        pre_howl = this.howls.get(pre_sound);
+                    }
+                }
 
-        this._subscribe_to_sound_events();
+                const my_sound = new Sound(index, main_howl, pre_howl, main_sound, pre_sound, priority);
+                this.my_sounds.push(my_sound);
+            }));
+
+            this._subscribe_to_sound_events();
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 
     play_sounds(time, sounds) {
@@ -299,7 +304,7 @@ class SoundPlayer extends EventTarget {
                     const floatVolume = (volume - 150) / 100;
                     this.my_sounds[index].play(floatVolume, true); // play looped
                 }
-                else 
+                else
                     continue;
 
                 playing_count++;
