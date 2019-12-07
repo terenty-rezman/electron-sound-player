@@ -1,5 +1,5 @@
 {
-  "name": "electron-react-template",
+  "name": "soundplayer",
   "version": "1.0.0",
   "private": true,
   "author": "terenty rezman",
@@ -11,12 +11,17 @@
     "appId": "some.app.id",
     "files": [
       "build/**/*",
-      "!build/sounds"
+      "!build/sounds",
+      "!build/settings.json"
     ],
     "extraFiles": [
       {
         "from": "build/sounds",
         "to": "sounds"
+      },
+      {
+        "from": "build/settings.json",
+        "to": "settings.json"
       }
     ],
     "win": {},

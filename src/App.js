@@ -7,16 +7,20 @@ import Statusbar from './components/Statusbar'
 import ControlPanel from './components/ControlPanel'
 import Background from './components/Background'
 
-import paths from './paths'
+import utils from './utils'
 
 import soundServer from './SoundServer'
 import soundPlayer from './SoundPlayer'
+
+const remote = require('electron').remote;
 
 // to debug renderer process with vscode follow 
 // https://blog.matsu.io/debug-electron-vscode
 
 // main layout flex + scroll in children taken from:
 // https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336
+
+let win = null; // global just in case it might get gc'ed but im not sure if this is possible
 
 soundServer.on('play', (time, sounds) => {
   soundPlayer.play_sounds(time, sounds);
@@ -55,7 +59,7 @@ const columns = [
           :
           <Tag>{data.pre}</Tag>
         :
-        <span style={{ /*color: '#999999'*/ }}>no</span>
+        <span>no</span>
   },
   {
     title: 'Volume',
@@ -147,6 +151,10 @@ const App = () => {
     setBackgroundVisible(visible => !visible);
   }
 
+  const handleDevTools = () => {
+    win.webContents.openDevTools();
+  }
+
   // setup event listeners 
   useEffect(() => {
     soundPlayer.addEventListener('play', onPlay);
@@ -172,17 +180,30 @@ const App = () => {
 
   // setup sound player & sound server on first render
   useEffect(() => {
-    const dir = paths.getWorkingDir();
+    const dir = utils.getWorkingDir();
+    const settings = utils.readSettingsFile(dir + '/settings.json');
 
-    soundPlayer.readConfig(dir + '/sounds/sound_list.json', dir + '/sounds/');
-    soundServer.bind(4455);
+    soundPlayer.setMaxSounds(settings.max_sounds);
+    soundPlayer.loadSoundFiles(dir + '/sounds/sound_list.json', dir + '/sounds/');
+    
+    soundServer.bind(settings.listen_port, settings.listen_address);
+  }, []);
+
+  // get current browser window
+  useEffect(() => {
+    win = remote.getCurrentWindow();
   }, []);
 
   const menu = (
     <Menu theme="dark">
       <Menu.Item>
         <a href="#" onClick={handleBackgroundVisible}>
-          {backgroundVisible ? <Icon type="check" /> : null} Show Background
+          {backgroundVisible ? 'Hide Background' : 'Show Background'}
+        </a>
+      </Menu.Item>
+      <Menu.Item>
+        <a href="#" onClick={handleDevTools}>
+          Developer tools
         </a>
       </Menu.Item>
     </Menu>

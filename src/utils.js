@@ -1,5 +1,6 @@
 const app = require('electron').remote.app
 const path = require('path')
+const fs = require('fs')
 
 function getWorkingDir() {
     if (process.env.WEBPACK_MODE === 'production') {
@@ -13,6 +14,11 @@ function getWorkingDir() {
     }
 }
 
-const paths = {getWorkingDir};
+function readSettingsFile(src) {
+    const settings = JSON.parse(fs.readFileSync(src, 'utf8'));
+    return settings;
+}
 
-export default paths
+const utils = {getWorkingDir, readSettingsFile};
+
+export default utils

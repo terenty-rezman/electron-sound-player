@@ -172,6 +172,7 @@ class SoundPlayer extends EventTarget {
         this.howls = new Map();
         this.my_sounds = [];
         this.time = 0;
+        this.max_sounds = 10;
     }
 
     static async createHowl(soundName, soundDir) {
@@ -199,6 +200,10 @@ class SoundPlayer extends EventTarget {
         );
     }
 
+    setMaxSounds(number) {
+        this.max_sounds = number;
+    }
+
     getMasterVolume() {
         return Math.trunc(Howler.volume() * 100);
     }
@@ -211,8 +216,8 @@ class SoundPlayer extends EventTarget {
         Howler.mute(muted);
     }
 
-    async readConfig(configFileName, soundDir) {
-        const config = JSON.parse(fs.readFileSync(configFileName, 'utf8'));
+    async loadSoundFiles(soundlistFileName, soundDir) {
+        const config = JSON.parse(fs.readFileSync(soundlistFileName, 'utf8'));
 
         // parse config file
         await Promise.all(config.sound_list.map(async (description, index) => {
@@ -229,7 +234,7 @@ class SoundPlayer extends EventTarget {
                 this.howls.set(main_sound, main_howl);
             }
             else {
-                console.log(`sound ${main_sound} already exists in ${configFileName} !`);
+                console.log(`sound ${main_sound} already exists in ${soundlistFileName} !`);
                 main_howl = this.howls.get(main_sound);
             }
 
@@ -255,7 +260,6 @@ class SoundPlayer extends EventTarget {
         this.time = time;
         this._notify_time();
 
-        const max_sounds = 4;
         const priority_list = [];
 
         // first form priority list of sounds to play
@@ -286,7 +290,7 @@ class SoundPlayer extends EventTarget {
             if (volume === 255) {
                 this.m_sounds[i].stop();
             }
-            else if (playing_count < max_sounds) {
+            else if (playing_count < this.max_sounds) {
                 if (0 < volume && volume <= 100) {
                     const floatVolume = volume / 100;
                     this.my_sounds[index].play(floatVolume, false); // play normal

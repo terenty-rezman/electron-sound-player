@@ -97,7 +97,11 @@ const config_electron_react_renderer = (env, argv) => {
         {
           from: 'src/girls/',
           to: 'girls/'
-        }
+        },
+        {
+          from: 'src/settings.json',
+          to: ''
+        },
       ]),
       new webpack.DefinePlugin({
         'process.env': {

@@ -3,6 +3,7 @@ const path = require('path')
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const Menu = electron.Menu;
 
 let mainWindow = null; // global to avoid being gc'ed
 
@@ -21,6 +22,10 @@ function createWindow() {
   });
 
   mainWindow.once('ready-to-show', () => {
+    // disable default menu + default hotkeys when in production
+    if (process.env.WEBPACK_MODE === 'production')
+      Menu.setApplicationMenu(null);
+
     mainWindow.show();
   });
 
