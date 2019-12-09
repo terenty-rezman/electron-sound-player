@@ -11,7 +11,7 @@
     opacity            : 0.8;
 }
 
-/* transitions for TransitionGroup */
+/* transitions for CSSTransition */
 .appear-enter {
     opacity: 0;
 }

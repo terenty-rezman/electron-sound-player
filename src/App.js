@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Log from './components/Log'
-import { Tag, Icon, Dropdown, Menu } from 'antd'
+import { Tag, Icon, Dropdown, Menu, Button, Result } from 'antd'
 import MyTable from './components/MyTable'
 import Titlebar from './components/Titlebar'
 import Statusbar from './components/Statusbar'
 import ControlPanel from './components/ControlPanel'
 import Background from './components/Background'
+import PageDispaly from './components/PageDisplay'
 
 import utils from './utils'
 
@@ -90,6 +91,7 @@ const App = () => {
   const [address, setAddress] = useState(null); // udp sound server address it's listening on
   const [udpTimeStamp, setUdpTimeStamp] = useState(0); // every udp received has some time stamp to indicate that something is going on
   const [backgroundVisible, setBackgroundVisible] = useState(false);
+  const [page, setPage] = useState(0);
 
   const onListen = (e) => {
     setAddress(soundServer.address());
@@ -185,7 +187,7 @@ const App = () => {
     const dir = utils.getWorkingDir();
     let settings = utils.readSettingsFile(dir + '/settings.json');
 
-    if(!settings) {
+    if (!settings) {
       settings = {
         listen_address: "0.0.0.0",
         listen_port: 4455,
@@ -193,7 +195,7 @@ const App = () => {
       }
     }
 
-    soundPlayer.setMaxSounds(settings.max_sounds );
+    soundPlayer.setMaxSounds(settings.max_sounds);
 
     soundPlayer.loadSoundFiles(dir + '/sounds/sound_list.json', dir + '/sounds/');
     soundServer.bind(settings.listen_port, settings.listen_address);
@@ -217,6 +219,11 @@ const App = () => {
           Developer tools
         </a>
       </Menu.Item>
+      <Menu.Item>
+        <a href="#" onClick={() => setPage(1)}>
+          About
+        </a>
+      </Menu.Item>
     </Menu>
   );
 
@@ -228,23 +235,33 @@ const App = () => {
         </span>
       </Dropdown>
     </Titlebar>,
-    <Background visible={backgroundVisible} key={2} />,
-    <div className='container' key={3}>
-      <MyTable
-        className='section h60'
-        dataSource={sounds}
-        columns={columns}
-      />
-      <div className='divider flex_no_shrink'>
-        <ControlPanel
-          masterVolume={soundPlayer.getMasterVolume()}
-          setMasterVolume={soundPlayer.setMasterVolume}
-          setMasterMuted={soundPlayer.setMasterMuted}
+    <PageDispaly page={page} key={3}>
+      <div className='container'>
+        <Background visible={backgroundVisible} key={2} />
+        <MyTable
+          className='section h60'
+          dataSource={sounds}
+          columns={columns}
+        />
+        <div className='divider flex_no_shrink'>
+          <ControlPanel
+            masterVolume={soundPlayer.getMasterVolume()}
+            setMasterVolume={soundPlayer.setMasterVolume}
+            setMasterMuted={soundPlayer.setMasterMuted}
+          />
+        </div>
+        <Log className='h30 scrollable-content pad-left log' />
+        <Statusbar address={address} time={udpTimeStamp} key={4} />
+      </div>
+      <div className='container flex-center'>
+        <Result
+          icon={<Icon type="customer-service" theme="twoTone" />}
+          title="Sound Player"
+          subTitle="All models are of the age 18."
+          extra={<Button type="primary" onClick={()=>setPage(0)}>Back</Button>}
         />
       </div>
-      <Log className='h30 scrollable-content pad-left log' />
-    </div>,
-    <Statusbar address={address} time={udpTimeStamp} key={4} />
+    </PageDispaly>
   ])
 }
 

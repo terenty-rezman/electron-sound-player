@@ -55,13 +55,13 @@ const Log = (props) => {
     const items = messages.map( (message, index) => {
         if(message.includes('Error')) {
             return ([
-                <Alert message={message} type="error" showIcon />,
+                <Alert message={message} type="error" showIcon key={index}/>,
                 <br />
             ])
         }
         else {
             return (
-                <div>{message}</div>
+                <div key={index}>{message}</div>
             )
         }
     })
