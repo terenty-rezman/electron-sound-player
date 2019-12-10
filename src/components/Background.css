@@ -9,6 +9,7 @@
     background-size    : auto;
     background-position: right bottom;
     opacity            : 0.8;
+    z-index: -1;
 }
 
 /* transitions for CSSTransition */

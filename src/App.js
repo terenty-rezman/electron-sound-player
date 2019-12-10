@@ -207,7 +207,7 @@ const App = () => {
     win = remote.getCurrentWindow();
   }, []);
 
-  const menu = (
+  const menuFile = (
     <Menu theme="dark">
       <Menu.Item>
         <a href="#" onClick={handleBackgroundVisible}>
@@ -219,19 +219,29 @@ const App = () => {
           Developer tools
         </a>
       </Menu.Item>
+    </Menu>
+  );
+
+  const menuHelp = (
+    <Menu theme="dark">
       <Menu.Item>
         <a href="#" onClick={() => setPage(1)}>
           About
         </a>
       </Menu.Item>
     </Menu>
-  );
+  )
 
   return ([
     <Titlebar key={1}>
-      <Dropdown overlay={menu} trigger={['click']}>
+      <Dropdown overlay={menuFile} trigger={['click']}>
         <span className="menu-item">
           File
+        </span>
+      </Dropdown>
+      <Dropdown overlay={menuHelp} trigger={['click']}>
+        <span className="menu-item">
+          Help
         </span>
       </Dropdown>
     </Titlebar>,
@@ -257,7 +267,7 @@ const App = () => {
         <Result
           icon={<Icon type="customer-service" theme="twoTone" />}
           title="Sound Player"
-          subTitle="All models are of the age 18."
+          subTitle="All models are of the age of 18."
           extra={<Button type="primary" onClick={()=>setPage(0)}>Back</Button>}
         />
       </div>
