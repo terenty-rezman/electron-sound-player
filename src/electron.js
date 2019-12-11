@@ -1,11 +1,18 @@
 const electron = require('electron')
 const path = require('path')
 
+const protection = require('./protection')
+
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 
 let mainWindow = null; // global to avoid being gc'ed
+
+function startup() {
+  const sn = protection.linux_getCurrentDriveSN();
+  createWindow();
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -55,7 +62,7 @@ function createWindow() {
 
 }
 
-app.on('ready', createWindow)
+app.on('ready', startup)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -68,3 +75,4 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
