@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Log from './components/Log'
-import { Tag, Icon, Dropdown, Menu, Button, Result } from 'antd'
+import { Tag, Icon, Button, Result } from 'antd'
+
 import MyTable from './components/MyTable'
-import Titlebar from './components/Titlebar'
 import Statusbar from './components/Statusbar'
 import ControlPanel from './components/ControlPanel'
 import Background from './components/Background'
-import PageDispaly from './components/PageDisplay'
+import MainWindow from './components/MainWindow'
 
 import utils from './utils'
 
@@ -207,47 +207,36 @@ const App = () => {
     win = remote.getCurrentWindow();
   }, []);
 
-  const menuFile = (
-    <Menu theme="dark">
-      <Menu.Item>
-        <a href="#" onClick={handleBackgroundVisible}>
-          {backgroundVisible ? 'Hide Background' : 'Show Background'}
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a href="#" onClick={handleDevTools}>
-          Developer tools
-        </a>
-      </Menu.Item>
-    </Menu>
-  );
+  const menuTemplate = [
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: backgroundVisible ? 'Hide Background' : 'Show Background',
+          click: handleBackgroundVisible
+        },
+        {
+          label: 'Developer tools',
+          click: handleDevTools
+        }
+      ]
+    }
+    ,
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'About',
+          click: () => setPage(1)
+        }
+      ]
+    }
+  ]
 
-  const menuHelp = (
-    <Menu theme="dark">
-      <Menu.Item>
-        <a href="#" onClick={() => setPage(1)}>
-          About
-        </a>
-      </Menu.Item>
-    </Menu>
-  )
-
-  return ([
-    <Titlebar key={1}>
-      <Dropdown overlay={menuFile} trigger={['click']}>
-        <span className="menu-item">
-          File
-        </span>
-      </Dropdown>
-      <Dropdown overlay={menuHelp} trigger={['click']}>
-        <span className="menu-item">
-          Help
-        </span>
-      </Dropdown>
-    </Titlebar>,
-    <PageDispaly page={page} key={3}>
+  return (
+    <MainWindow menuTemplate={menuTemplate} currentPageIndex={page}>
       <div className='container'>
-        <Background visible={backgroundVisible} key={2} />
+        <Background visible={backgroundVisible} />
         <MyTable
           className='section h60'
           dataSource={sounds}
@@ -261,7 +250,7 @@ const App = () => {
           />
         </div>
         <Log className='h30 scrollable-content pad-left log' />
-        <Statusbar address={address} time={udpTimeStamp} key={4} />
+        <Statusbar address={address} time={udpTimeStamp} />
       </div>
       <div className='container flex-center'>
         <Result
@@ -271,8 +260,8 @@ const App = () => {
           extra={<Button type="primary" onClick={()=>setPage(0)}>Back</Button>}
         />
       </div>
-    </PageDispaly>
-  ])
+    </MainWindow>
+  )
 }
 
 export default App
