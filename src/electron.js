@@ -57,8 +57,10 @@ function createWindow() {
 
   if (process.env.WEBPACK_MODE === 'production')
     mainWindow.loadFile('./build/index.html');
-  else
-    mainWindow.loadURL('http://localhost:3132');
+  else {
+    const port = process.env.WEBPACK_DEV_SERV_PORT;
+    mainWindow.loadURL(`http://localhost:${port}`);
+  }
 
 }
 

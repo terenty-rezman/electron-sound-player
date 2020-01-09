@@ -4,6 +4,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 // config created following a very nice guide from https://fullstackopen.com/en/part7/webpack
 
+// webpack dev server port
+const DEV_PORT = 3132
+
 // build configuration for electron main file
 // it's only used to set global environment variable WEBPACK_MODE
 const config_electron_main = (env, argv) => {
@@ -19,9 +22,8 @@ const config_electron_main = (env, argv) => {
     devtool: 'source-map',
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': {
-          'WEBPACK_MODE': JSON.stringify(mode)
-        }
+        'process.env.WEBPACK_MODE': JSON.stringify(mode),
+        'process.env.WEBPACK_DEV_SERV_PORT': DEV_PORT
       })
     ]
   }
@@ -105,9 +107,7 @@ const config_electron_react_renderer = (env, argv) => {
         },
       ]),
       new webpack.DefinePlugin({
-        'process.env': {
-          'WEBPACK_MODE': JSON.stringify(mode)
-        }
+        'process.env.WEBPACK_MODE': JSON.stringify(mode)
       })
     ]
   }
