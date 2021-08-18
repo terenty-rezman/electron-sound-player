@@ -1,5 +1,10 @@
 # Electron Sound Player
+
+<br>
+
 ![image](https://user-images.githubusercontent.com/58115884/129878342-042ce579-2cdf-4451-8dea-1a7eada9ed7a.png)
+
+<br>
 
 > Simplistic primitive udp sound player based on web technologies (__Electron__, __React__)
 
