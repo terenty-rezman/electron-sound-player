@@ -1,3 +1,4 @@
+// TODO: this module not complete, dont use it
 const { spawnSync } = require('child_process');
 
 function linux_getDeviceName() {

@@ -10,7 +10,8 @@ const Menu = electron.Menu;
 let mainWindow = null; // global to avoid being gc'ed
 
 function startup() {
-  const sn = protection.linux_getCurrentDriveSN();
+  // protection not complete yet
+  // const sn = protection.linux_getCurrentDriveSN();
   createWindow();
 }
 
