@@ -254,6 +254,10 @@ class SoundPlayer extends EventTarget {
                 this.my_sounds.push(my_sound);
             }));
 
+            // restore original order from .json config file
+            // as after async load above sounds arrive out of order into my_sounds
+            this.my_sounds.sort((a, b) => a - b)
+
             this._subscribe_to_sound_events();
         }
         catch (e) {
@@ -278,13 +282,7 @@ class SoundPlayer extends EventTarget {
         }
 
         // sort list by priority
-        priority_list.sort((a, b) => {
-            if (a.priority > b.priority)
-                return -1;
-            else if (a.priority < b.priority)
-                return 1;
-            return 0;
-        })
+        priority_list.sort((a, b) => b - a);
 
         // now play sounds from prioritized list up to max sounds
         let playing_count = 0
