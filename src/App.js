@@ -148,7 +148,7 @@ const App = () => {
 
   const onTime = (e) => {
     const time = e.detail.time;
-    setUdpTimeStamp(time);
+    setUdpTimeStamp(Number.parseFloat(time).toFixed(2));
   }
 
   const handleBackgroundVisible = () => {
@@ -256,7 +256,7 @@ const App = () => {
         <Result
           icon={<Icon type="customer-service" theme="twoTone" />}
           title="Sound Player"
-          subTitle="All models are of the age of 18."
+          subTitle="All models are of age of 18."
           extra={<Button type="primary" onClick={()=>setPage(0)}>Back</Button>}
         />
       </div>
