@@ -1,5 +1,6 @@
 {
     "listen_address": "0.0.0.0",
     "listen_port": 4455,
-    "max_sounds": 4
+    "max_sounds": 4,
+    "sound_kill_interval_secs": 3
 }

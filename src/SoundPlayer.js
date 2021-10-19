@@ -1,5 +1,6 @@
 import { Howler, Howl } from 'howler'
 import { func } from 'prop-types';
+import { debounce } from "debounce";
 
 const util = require('util');
 const fs = require('fs');
@@ -173,6 +174,7 @@ class SoundPlayer extends EventTarget {
         this.my_sounds = [];
         this.time = 0;
         this.max_sounds = 10;
+        this.debounced_stop_all_sounds = null;
     }
 
     static async createHowl(soundName, soundDir) {
@@ -198,6 +200,10 @@ class SoundPlayer extends EventTarget {
                 }
             })
         );
+    }
+
+    set_auto_stop_in(ms) {
+        this.debounced_stop_all_sounds = debounce(this.stop_all.bind(this), ms);
     }
 
     setMaxSounds(number) {
@@ -261,7 +267,7 @@ class SoundPlayer extends EventTarget {
             // print sound list 
             console.log("\n Sound List\n")
             this.my_sounds.forEach(sound => {
-                console.log(`[${sound.idx}] ${sound.main_name}`);
+                console.log(`[${sound.idx + 1}] ${sound.main_name}`);
             })
 
             this._subscribe_to_sound_events();
@@ -272,6 +278,9 @@ class SoundPlayer extends EventTarget {
     }
 
     play_sounds(time, sounds) {
+        if(this.debounced_stop_all_sounds)
+            this.debounced_stop_all_sounds();
+
         this.time = time;
         this._notify_time();
 
@@ -324,6 +333,10 @@ class SoundPlayer extends EventTarget {
             my_sound.addEventListener('volume', this._onVolume);
             my_sound.addEventListener('stop', this._onStop);
         })
+    }
+
+    stop_all() {
+        this.my_sounds.forEach(sound => sound.stop());
     }
 
     _onPlay = (e) => {

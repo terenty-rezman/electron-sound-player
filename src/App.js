@@ -34,7 +34,8 @@ const columns = [
     title: 'Channel',
     dataIndex: 'channel',
     key: 'channel',
-    size: 3
+    size: 3,
+    render: data => data.channel + 1
   },
   {
     title: 'Main sound',
@@ -159,6 +160,18 @@ const App = () => {
     win.webContents.openDevTools();
   }
 
+  const showSettingsFile = () => {
+    const dir = utils.getWorkingDir();
+    let settings = dir + '/settings.json';
+    remote.shell.showItemInFolder(settings);
+  }
+
+  const showSoundListFile = () => {
+    const dir = utils.getWorkingDir();
+    let sound_list_file = dir + '/sounds/sound_list.json';
+    remote.shell.showItemInFolder(sound_list_file);
+  }
+  
   // setup event listeners 
   useEffect(() => {
     soundPlayer.addEventListener('play', onPlay);
@@ -191,13 +204,15 @@ const App = () => {
       settings = {
         listen_address: "0.0.0.0",
         listen_port: 4455,
-        max_sounds: 10
+        max_sounds: 10,
+        sound_kill_interval_secs: 3
       }
     }
 
     soundPlayer.setMaxSounds(settings.max_sounds);
 
     soundPlayer.loadSoundFiles(dir + '/sounds/sound_list.json', dir + '/sounds/');
+    soundPlayer.set_auto_stop_in(Number.parseFloat(settings.sound_kill_interval_secs) * 1000);
     soundServer.bind(settings.listen_port, settings.listen_address);
 
   }, []);
@@ -214,6 +229,14 @@ const App = () => {
         {
           label: backgroundVisible ? 'Hide Background' : 'Show Background',
           click: handleBackgroundVisible
+        },
+        {
+          label: "Show settings.json",
+          click: showSettingsFile
+        },
+        {
+          label: "Show sound_list.json",
+          click: showSoundListFile
         },
         {
           label: 'Developer tools',
