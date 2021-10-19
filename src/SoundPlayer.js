@@ -242,7 +242,7 @@ class SoundPlayer extends EventTarget {
                 // if presound exists create howl for pre sound
                 if (pre_sound) {
                     if (this.howls.has(pre_sound) === false) {
-                        pre_howl = SoundPlayer.createHowl(pre_sound, soundDir);
+                        pre_howl = await SoundPlayer.createHowl(pre_sound, soundDir);
                         this.howls.set(pre_sound, pre_howl);
                     }
                     else {
@@ -257,6 +257,12 @@ class SoundPlayer extends EventTarget {
             // restore original order from .json config file
             // as after async load above sounds arrive out of order into my_sounds
             this.my_sounds.sort((a, b) => a.idx - b.idx)
+
+            // print sound list 
+            console.log("\n Sound List\n")
+            this.my_sounds.forEach(sound => {
+                console.log(`[${sound.idx}] ${sound.main_name}`);
+            })
 
             this._subscribe_to_sound_events();
         }
@@ -288,10 +294,10 @@ class SoundPlayer extends EventTarget {
         let playing_count = 0
         for (let i = 0; i < priority_list.length; i++) {
             const index = priority_list[i].index;
-            const volume = sounds[i];
+            const volume = sounds[index];
 
             if (volume === 255) {
-                this.m_sounds[i].stop();
+                this.m_sounds[index].stop();
             }
             else if (playing_count < this.max_sounds) {
                 if (0 < volume && volume <= 100) {
