@@ -50,7 +50,7 @@
     "concurrently": "^5.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",
-    "electron": "^7.1.2",
+    "electron": "^18.3.7",
     "electron-builder": "^21.2.0",
     "file-loader": "^6.2.0",
     "howler": "^2.1.2",
