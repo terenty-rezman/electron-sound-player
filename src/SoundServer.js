@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
 app.post('/api/play_sound', (req, res) => {
   // req.body available because of body-parser
-    console.log(req.body)
+    // console.log(req.body)
     let body = req.body;
     udp_server.emit('play_by_name', body.name, body.volume || 100, body.looped || false);
     send(res, 201, {status: "ok"});
@@ -27,7 +27,7 @@ app.post('/api/play_sound', (req, res) => {
 
 app.post('/api/stop_sound', (req, res) => {
   // req.body available because of body-parser
-    console.log(req.body)
+    // console.log(req.body)
     let body = req.body;
     udp_server.emit('stop_by_name', body.name);
     send(res, 201, {status: "ok"});
