@@ -29,6 +29,18 @@ soundServer.on('play', (time, sounds) => {
   soundPlayer.play_sounds(time, sounds);
 })
 
+soundServer.on('play_by_name', (name, volume, looped) => {
+  soundPlayer.play_sound_by_name(name, volume, looped);
+})
+
+soundServer.on('stop_by_name', (name) => {
+  soundPlayer.stop_sound_by_name(name);
+})
+
+soundServer.on('stop_all_sounds', () => {
+  soundPlayer.stop_all();
+})
+
 const columns = [
   {
     title: 'Channel',
@@ -213,13 +225,13 @@ const App = () => {
 
     soundPlayer.loadSoundFiles(dir + '/sounds/sound_list.json', dir + '/sounds/');
     soundPlayer.set_auto_stop_in(Number.parseFloat(settings.sound_kill_interval_secs) * 1000);
-    soundServer.bind(settings.listen_port, settings.listen_address);
-
+    soundServer.start_listen(settings.listen_port, settings.listen_address);
   }, []);
 
   // get current browser window
   useEffect(() => {
     win = remote.getCurrentWindow();
+    // win.webContents.openDevTools();
   }, []);
 
   const menuTemplate = [

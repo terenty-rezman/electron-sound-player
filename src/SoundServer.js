@@ -1,5 +1,45 @@
 const dgram = require('dgram');
+const polka = require('polka');
+const body_parser = require('body-parser');
 
+
+const app = polka();
+app.use(body_parser.json());
+
+const send = (res, status, data) => {
+  res.statusCode = status;
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(data));
+};
+
+// Routes
+app.get('/', (req, res) => {
+    res.end('Hello world!');
+});
+
+app.post('/api/play_sound', (req, res) => {
+  // req.body available because of body-parser
+    console.log(req.body)
+    let body = req.body;
+    udp_server.emit('play_by_name', body.name, body.volume || 100, body.looped || false);
+    send(res, 201, {status: "ok"});
+});
+
+app.post('/api/stop_sound', (req, res) => {
+  // req.body available because of body-parser
+    console.log(req.body)
+    let body = req.body;
+    udp_server.emit('stop_by_name', body.name);
+    send(res, 201, {status: "ok"});
+});
+
+app.post('/api/stop_all_sounds', (req, res) => {
+  // req.body available because of body-parser
+    udp_server.emit('stop_all_sounds');
+    send(res, 201, {status: "ok"});
+});
+
+// Start the server and listen for incoming requests
 
 function unpackMsg(msg) {
     // unpack time
@@ -13,14 +53,14 @@ function unpackMsg(msg) {
     return [time, sounds];
 }
 
-const server = dgram.createSocket('udp4');
+const udp_server = dgram.createSocket('udp4');
 
-server.on('error', err => {
+udp_server.on('error', err => {
     console.log(`server error: ${err}`);
-    server.close();
+    udp_server.close();
 });
 
-server.on('message', (msg, rinfo) => {
+udp_server.on('message', (msg, rinfo) => {
     if(msg.byteLength <= 8) {
         console.log(`incorrect msg received from ${rinfo.address}:${rinfo.port}`);
         return;
@@ -29,12 +69,21 @@ server.on('message', (msg, rinfo) => {
     // console.log(`msg from ${rinfo.address}:${rinfo.port}`);
 
     const [time, sound_array] = unpackMsg(msg);
-    server.emit('play', time, sound_array);
+    udp_server.emit('play', time, sound_array);
 });
 
-server.on('listening', () => {
-    const address = server.address();
+udp_server.on('listening', () => {
+    const address = udp_server.address();
     console.log(`listening on ${address.address}:${address.port}`);
 });
 
-module.exports = server;
+udp_server.start_listen = (port, address) => {
+    udp_server.bind(port, address);
+
+    app.listen(port, address, err => {
+        if (err) throw err;
+        console.log(`http app listening at http://localhost:${port}`);
+    });
+}
+
+module.exports = udp_server

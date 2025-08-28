@@ -31,7 +31,7 @@
     }
   },
   "scripts": {
-    "electron": "electron .",
+    "electron": "electron . --enble-logging",
     "build": "webpack --mode=development",
     "prod": "webpack --mode=production",
     "start": "webpack --mode=development && concurrently \"webpack-dev-server --mode=development\" \"electron .\"",
@@ -64,6 +64,9 @@
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
-    "debounce": "^1.2.1"
+    "body-parser": "^1.18.1",
+    "debounce": "^1.2.1",
+    "express": "^4.16.4",
+    "polka": "^0.5.2"
   }
 }

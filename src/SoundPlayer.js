@@ -32,9 +32,10 @@ async function loadFileAsURL(src) {
 }
 
 class Sound extends EventTarget {
-    constructor(idx, main_howl, pre_howl, main_name, pre_name, priority) {
+    constructor(name, idx, main_howl, pre_howl, main_name, pre_name, priority) {
         super();
 
+        this.name = name;
         this.idx = idx;
         this.main_howl = main_howl;
         this.pre_howl = pre_howl;
@@ -228,7 +229,7 @@ class SoundPlayer extends EventTarget {
 
             // parse config file
             await Promise.all(config.sound_list.map(async (description, index) => {
-                const { main_sound, pre_sound, priority } = description;
+                const { name, main_sound, pre_sound, priority } = description;
                 let main_howl = null;
                 let pre_howl = null;
 
@@ -256,7 +257,7 @@ class SoundPlayer extends EventTarget {
                     }
                 }
 
-                const my_sound = new Sound(index, main_howl, pre_howl, main_sound, pre_sound, priority);
+                const my_sound = new Sound(name, index, main_howl, pre_howl, main_sound, pre_sound, priority);
                 this.my_sounds.push(my_sound);
             }));
 
@@ -322,6 +323,32 @@ class SoundPlayer extends EventTarget {
 
                 playing_count++;
             }
+        }
+    }
+
+    play_sound_by_name(name, volume, looped) {
+        const playing_count = this.my_sounds.reduce((acc, s) => (s.playing == true) ? acc + 1 : acc, 0);
+        if (playing_count >= this.max_sounds) {
+            console.log("cant play more sounds, max sounds reached");
+            return
+        }
+
+        let sound = this.my_sounds.find(s => s.name == name);
+        if (sound == undefined) {
+            console.log(`play: no such sound ${sound} !`)
+        }
+        else {
+            sound.play(volume, looped);
+        }
+    }
+
+    stop_sound_by_name(name) {
+        let sound = this.my_sounds.find(s => s.name == name);
+        if (sound == undefined) {
+            console.log(`stop: no such sound ${sound} !`)
+        }
+        else {
+            sound.stop();
         }
     }
 

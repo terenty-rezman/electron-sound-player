@@ -1,56 +1,67 @@
 {
     "sound_list": [
         {
+            "name": "engine_min",
             "main_sound": "sound_engine_min_l.ogg",
             "pre_sound": null,
             "priority": 9
         },
         {
+            "name": "engine_max",
             "main_sound": "sound_engine_max_l.ogg",
             "pre_sound": null,
             "priority": 7
         },
         {
+            "name": "engine_max",
             "main_sound": "sound_flaps_down.ogg",
             "pre_sound": null,
             "priority": 2
         },
         {
+            "name": "flaps_up",
             "main_sound": "sound_flaps_up.ogg",
             "pre_sound": null,
             "priority": 2
         },
         {
+            "name": "airbrake_on",
             "main_sound": "sound_airbrake_on.ogg",
             "pre_sound": null,
             "priority": 2
         },
         {
+            "name": "airbrake_off",
             "main_sound": "sound_airbrake_off.ogg",
             "pre_sound": null,
             "priority": 2
         },
         {
+            "name": "gear_on",
             "main_sound": "sound_gear_on.ogg",
             "pre_sound": null,
             "priority": 2
         },
         {
+            "name": "gear_off",
             "main_sound": "sound_gear_off.ogg",
             "pre_sound": null,
             "priority": 2
         },
         {
+            "name": "touchdown",
             "main_sound": "sound_touchdown_nose.ogg",
             "pre_sound": null,
             "priority": 3
         },
         {
+            "name": "piu",
             "main_sound": "_presound_piu.ogg",
             "pre_sound": null,
             "priority": 4
         },
         {
+            "name": "value1",
             "main_sound": "value_0010.ogg",
             "pre_sound": "_presound_piu.ogg",
             "priority": 4

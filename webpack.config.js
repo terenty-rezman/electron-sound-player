@@ -71,7 +71,9 @@ const config_electron_react_renderer = (env, argv) => {
             ],
             plugins: [
               ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }], // `style: true` for less
-              '@babel/plugin-proposal-class-properties'
+              '@babel/plugin-proposal-class-properties',
+              '@babel/plugin-transform-optional-chaining',
+              '@babel/plugin-transform-nullish-coalescing-operator'
             ],
           },
         },
